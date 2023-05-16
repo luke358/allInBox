@@ -1,7 +1,7 @@
 <template>
   <div class="webViewContainer w-100% h-100%">
-    <webview autosize id="foo" :src="src" v-if="src" style="display:inline-flex;"
-      class="w-100% h-100%"></webview>
+    <webview autosize id="foo" :src="src"
+      style="display:inline-flex;" class="w-100% h-100%"></webview>
   </div>
 </template>
 

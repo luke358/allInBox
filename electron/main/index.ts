@@ -1,6 +1,7 @@
 import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import { release } from 'node:os'
 import { join } from 'node:path'
+import { setupTitlebar, attachTitlebarToWindow } from "custom-electron-titlebar/main";
 
 // The built directory structure
 //
@@ -40,10 +41,14 @@ const preload = join(__dirname, '../preload/index.js')
 const url = process.env.VITE_DEV_SERVER_URL
 const indexHtml = join(process.env.DIST, 'index.html')
 
+setupTitlebar();
+
 async function createWindow() {
+
   win = new BrowserWindow({
     title: 'Main window',
     icon: join(process.env.PUBLIC, 'favicon.ico'),
+    titleBarStyle: 'hidden',
     webPreferences: {
       preload,
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
@@ -74,6 +79,7 @@ async function createWindow() {
     return { action: 'deny' }
   })
   // win.webContents.on('will-navigate', (event, url) => { }) #344
+  attachTitlebarToWindow(win);
 }
 
 app.whenReady().then(createWindow)

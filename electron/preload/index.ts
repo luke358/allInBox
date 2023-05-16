@@ -1,3 +1,9 @@
+import { Titlebar,TitlebarColor } from "custom-electron-titlebar";
+
+window.addEventListener('DOMContentLoaded', () => {
+  // Title bar implementation
+  new Titlebar({backgroundColor: TitlebarColor.fromHex('#469398')});
+});
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
