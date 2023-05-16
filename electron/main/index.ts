@@ -51,6 +51,7 @@ async function createWindow() {
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       nodeIntegration: true,
       contextIsolation: false,
+      webviewTag: true
     },
   })
 
@@ -76,6 +77,7 @@ async function createWindow() {
 }
 
 app.whenReady().then(createWindow)
+// app.commandLine.appendSwitch('disable-features', 'CrossOriginOpenerPolicy')
 
 app.on('window-all-closed', () => {
   win = null
