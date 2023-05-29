@@ -43,6 +43,10 @@ const indexHtml = join(process.env.DIST, 'index.html')
 
 setupTitlebar();
 
+// 启用 Widevine DRM 插件
+// app.commandLine.appendSwitch('widevine-cdm-path', '/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/113.0.5672.126/Libraries/WidevineCdm/_platform_specific/mac_x64')
+// app.commandLine.appendSwitch('widevine-cdm-version', '113.0.5672.126')
+
 async function createWindow() {
 
   win = new BrowserWindow({
