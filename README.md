@@ -11,6 +11,13 @@
 <string>In process</string>
 <br>
 
+## TODO
+
+[ ] services store
+[ ] service configuration
+[ ] hibernation service
+[ ] wake up service
+
 ## Features
 
 License
