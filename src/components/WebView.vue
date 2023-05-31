@@ -1,7 +1,10 @@
 <template>
-  <div class="webViewContainer w-100% h-100%">
+  <div class="webViewContainer w-100% h-100% overflow-hidden">
     <webview autosize :src="src" style="display:inline-flex;"
-      class="w-100% h-100%" allowpopups plugins />
+      class="w-100% h-100%" 
+      allowpopups 
+      webpreferences='spellcheck=1, contextIsolation=1`'
+      :disablewebsecurity="true" />
   </div>
 </template>
 

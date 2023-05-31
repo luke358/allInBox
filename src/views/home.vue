@@ -11,7 +11,6 @@ const changeWebView = (item: any) => {
 const urls = [
   { src: 'https://mail.google.com/mail', name: 'Gmail' },
   { src: 'https://twitter.com/', name: 'Twitter' },
-  { src: 'https://www.spotify.com/', name: 'Spotify' },
   { src: 'https://github.com/', name: 'Github' },
   { src: 'https://www.aliyundrive.com/drive', name: '阿里云盘' },
   // preload 初始强制加载
