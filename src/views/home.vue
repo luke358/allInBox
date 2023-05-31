@@ -8,7 +8,7 @@ const changeWebView = (item: any) => {
   if (getDomain(item.src))
     urlRendered.value.add(getDomain(item.src)!)
 }
-const urls = [
+const services = [
   { src: 'https://mail.google.com/mail', name: 'Gmail' },
   { src: 'https://twitter.com/', name: 'Twitter' },
   { src: 'https://github.com/', name: 'Github' },
@@ -33,7 +33,7 @@ const urlRendered = ref<Set<string>>(new Set())
   <div class="home" flex>
     <div flex flex-col bg-hex-f0f2f5 pt-10px>
       <div class="h-60%" w-65px flex items-center flex-col>
-        <div v-for="item in urls" class="rd-50%" mb-10px w-45px h-45px flex
+        <div v-for="item in services" class="rd-50%" mb-10px w-45px h-45px flex
           items-center justify-center @click="() => changeWebView(item)">
           <img w-30px h-30px
             :src="`https://api.iowen.cn/favicon/${getDomain(item.src)}.png`"
@@ -48,7 +48,7 @@ const urlRendered = ref<Set<string>>(new Set())
     <div class="w-100% h-100%">
       <div class="w-100% h-100%"
         v-show="getDomain(item.src) === getDomain(activeSrc)"
-        v-for="item in urls">
+        v-for="item in services">
         <WebView :src="item.src"
           v-if="item.preload || urlRendered.has(getDomain(item.src)!)" />
       </div>
