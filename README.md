@@ -13,10 +13,10 @@
 
 ## TODO
 
-[ ] services store
-[ ] service configuration
-[ ] hibernation service
-[ ] wake up service
+- [ ] services store
+- [ ] service configuration
+- [ ] hibernation service
+- [ ] wake up service
 
 ## Features
 
