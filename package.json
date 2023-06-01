@@ -39,6 +39,7 @@
   "dependencies": {
     "custom-electron-titlebar": "^4.2.2",
     "normalize.css": "^8.0.1",
+    "pinia": "^2.1.3",
     "vue-router": "^4.2.0"
   }
 }
