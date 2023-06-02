@@ -1,14 +1,16 @@
 import { Ref, ReservedProps, WebViewHTMLAttributes } from "vue";
 
-type ElectronWebView = (WebViewHTMLAttributes & ReservedProps);
+export type ElectronWebView = (WebViewHTMLAttributes & ReservedProps);
 
 export type Service = {
   id: string
   name: string
   url: string
   iconUrl: string
-  _webview: ElectronWebView | null
+  _webview: ElectronWebView | undefined
 
+  // startup 强制加载
+  preload: boolean
   timer: NodeJS.Timeout | null
   lastUsed: number
   lastHibernated: number
@@ -19,7 +21,7 @@ export type Service = {
   isError: boolean
   isLoading: boolean
 
-  team: string
+  team?: string
 }
 
 export type ServiceStore = {

@@ -13,10 +13,11 @@
 
 ## TODO
 
-- [ ] services store
+- [x] services store
 - [ ] service configuration
 - [ ] hibernation service
 - [ ] wake up service
+- [ ] 宫格聚合
 
 ## Features
 
