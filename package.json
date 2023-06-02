@@ -33,7 +33,7 @@
     "eslint": "^8.41.0",
     "sass": "^1.62.1",
     "typescript": "^5.0.4",
-    "unocss": "^0.51.13",
+    "unocss": "^0.52.7",
     "vite": "^4.3.5",
     "vite-plugin-electron": "^0.11.2",
     "vite-plugin-electron-renderer": "^0.14.2",
