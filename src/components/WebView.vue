@@ -1,5 +1,5 @@
 <script lang='ts' setup>
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import type { ElectronWebView, Service } from '../types'
 import WebViewLoad from './WebViewLoad.vue'
 
@@ -7,9 +7,16 @@ const { service } = defineProps<{ service: Service }>()
 
 const emits = defineEmits(['setWebview', 'didFinishLoad', 'didFailLoad'])
 const webViewRef = ref<ElectronWebView | null>(null)
+
+const didFinishLoad = () => emits('didFinishLoad')
+const didFailLoad = () => emits('didFailLoad')
 onMounted(() => {
-  webViewRef.value?.addEventListener('did-finish-load', () => emits('didFinishLoad'))
-  webViewRef.value?.addEventListener('did-fail-load', () => emits('didFailLoad'))
+  webViewRef.value?.addEventListener('did-finish-load', didFinishLoad)
+  webViewRef.value?.addEventListener('did-fail-load', didFailLoad)
+})
+onBeforeMount(() => {
+  webViewRef.value?.removeEventListener('did-finish-load', didFinishLoad)
+  webViewRef.value?.removeEventListener('did-finish-load', didFailLoad)
 })
 </script>
 
