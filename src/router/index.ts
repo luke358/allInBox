@@ -7,16 +7,16 @@ const router = createRouter({
     {
       path: '/',
       name: '',
-      component: defineAsyncComponent(() => import(`../views/home.vue`)),
+      component: defineAsyncComponent(() => import('../views/home.vue')),
     },
-  ]
+  ],
 })
 
 router.beforeEach((to, from, next) => {
   // console.log(to, from)
-  if (to.meta.title) {
-    document.title = `${to.meta.title}`;
-  }
+  if (to.meta.title)
+    document.title = `${to.meta.title}`
+
   next()
 })
 

@@ -5,6 +5,6 @@ export default defineConfig({
   presets: [
     presetAttributify(),
     presetIcons(),
-    presetUno()
-  ]
+    presetUno(),
+  ],
 })

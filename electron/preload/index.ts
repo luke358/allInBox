@@ -1,18 +1,18 @@
-import { Titlebar,TitlebarColor } from "custom-electron-titlebar";
+import { Titlebar, TitlebarColor } from 'custom-electron-titlebar'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Title bar implementation
-  new Titlebar({backgroundColor: TitlebarColor.fromHex('#469398')});
-});
+  new Titlebar({ backgroundColor: TitlebarColor.fromHex('#469398') })
+})
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
   return new Promise((resolve) => {
     if (condition.includes(document.readyState)) {
       resolve(true)
-    } else {
+    }
+    else {
       document.addEventListener('readystatechange', () => {
-        if (condition.includes(document.readyState)) {
+        if (condition.includes(document.readyState))
           resolve(true)
-        }
       })
     }
   })
@@ -20,14 +20,12 @@ function domReady(condition: DocumentReadyState[] = ['complete', 'interactive'])
 
 const safeDOM = {
   append(parent: HTMLElement, child: HTMLElement) {
-    if (!Array.from(parent.children).find(e => e === child)) {
+    if (!Array.from(parent.children).find(e => e === child))
       return parent.appendChild(child)
-    }
   },
   remove(parent: HTMLElement, child: HTMLElement) {
-    if (Array.from(parent.children).find(e => e === child)) {
+    if (Array.from(parent.children).find(e => e === child))
       return parent.removeChild(child)
-    }
   },
 }
 
@@ -38,7 +36,7 @@ const safeDOM = {
  * https://matejkustec.github.io/SpinThatShit
  */
 function useLoading() {
-  const className = `loaders-css__square-spin`
+  const className = 'loaders-css__square-spin'
   const styleContent = `
 @keyframes square-spin {
   25% { transform: perspective(100px) rotateX(180deg) rotateY(0); }

@@ -1,6 +1,6 @@
 // @ts-check
 import { defineStore } from 'pinia'
-import { Service, ServiceStore } from '../types'
+import type { Service, ServiceStore } from '../types'
 
 export const useServiceStore = defineStore({
   id: 'services',
@@ -20,7 +20,7 @@ export const useServiceStore = defineStore({
         iconUrl: 'xxx',
         isFirstLoad: true,
         isError: false,
-        isLoading: true
+        isLoading: true,
       },
       {
         url: 'https://web.telegram.org/a/',
@@ -36,7 +36,7 @@ export const useServiceStore = defineStore({
         iconUrl: 'xxx',
         isFirstLoad: true,
         isError: false,
-        isLoading: true
+        isLoading: true,
       },
       {
         url: 'https://www.aliyundrive.com/drive',
@@ -52,7 +52,7 @@ export const useServiceStore = defineStore({
         iconUrl: 'xxx',
         isFirstLoad: true,
         isError: false,
-        isLoading: true
+        isLoading: true,
       },
     ],
   }),
@@ -60,7 +60,7 @@ export const useServiceStore = defineStore({
     displayServices(): Service[] {
       // return this.allServices.filter(() => false)
       return this.allServices as Service[]
-    }
+    },
   },
   actions: {
     awake({ serviceId }: { serviceId: string }) {
@@ -76,7 +76,6 @@ export const useServiceStore = defineStore({
     },
     reloadActive({ serviceId }: { serviceId: string }) {
 
-    }
+    },
   },
 })
-

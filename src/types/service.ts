@@ -1,8 +1,8 @@
-import { Ref, ReservedProps, WebViewHTMLAttributes } from "vue";
+import type { ReservedProps, WebViewHTMLAttributes } from 'vue'
 
-export type ElectronWebView = (WebViewHTMLAttributes & ReservedProps);
+export type ElectronWebView = (WebViewHTMLAttributes & ReservedProps)
 
-export type Service = {
+export interface Service {
   id: string
   name: string
   url: string
@@ -24,6 +24,6 @@ export type Service = {
   team?: string
 }
 
-export type ServiceStore = {
+export interface ServiceStore {
   allServices: Service[]
 }
