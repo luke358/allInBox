@@ -38,6 +38,22 @@ export const useServiceStore = defineStore({
         isError: false,
         isLoading: true
       },
+      {
+        url: 'https://www.aliyundrive.com/drive',
+        preload: false,
+        name: '阿里云盘',
+        _webview: undefined,
+        lastUsed: Date.now(),
+        lastHibernated: Date.now(),
+        isActive: false,
+        timer: null,
+        isMuted: false,
+        id: 'aliyundrive',
+        iconUrl: 'xxx',
+        isFirstLoad: true,
+        isError: false,
+        isLoading: true
+      },
     ],
   }),
   getters: {

@@ -3,12 +3,25 @@ import { ref } from 'vue';
 import WebView from '../components/WebView.vue'
 import { useServiceStore } from '../store/services';
 import { Service } from '../types';
+import Sidebar from '../components/Sidebar.vue';
+import Setting from '../components/Setting.vue';
 const services = useServiceStore()
 const changeWebView = (service: Service) => {
   // console.log(item.url)
-  services.setActive({serviceId: service.id})
+  services.setActive({ serviceId: service.id })
   urlRendered.value.add(service.id)
 }
+const settings = [
+  {
+    icon: 'i-carbon-search'
+  },
+  {
+    icon: 'i-ion-extension-puzzle-outline'
+  },
+  {
+    icon: 'i-carbon-settings'
+  },
+]
 // const services = [
 //   { src: 'https://mail.google.com/mail', name: 'Gmail' },
 //   { src: 'https://twitter.com/', name: 'Twitter' },
@@ -19,32 +32,19 @@ const changeWebView = (service: Service) => {
 //   { src: 'https://web.telegram.org/a/', preload: true, name: 'Telegram' },
 // ]
 
-const getDomain = (sourceUrl: string | undefined) => {
-  if (!sourceUrl) return sourceUrl
-  const url = new URL(sourceUrl);
-  const domain = url.hostname.split('.').slice(-2).join('.');
-  return domain
-}
 // 初始是否渲染
 const urlRendered = ref<Set<string>>(new Set())
+
+const SETTING_HEIGHT = 45 * settings.length + 60
 </script>
 
 <template>
   <div class="home" flex>
-    <div flex flex-col bg-hex-f0f2f5 pt-10px>
-      <div class="h-60%" w-65px flex items-center flex-col>
-        <div v-for="item in services.displayServices" class="rd-50%" mb-10px w-45px
-          h-45px flex items-center justify-center
-          @click="() => changeWebView(item)">
-          <img w-30px h-30px
-            :src="`https://api.iowen.cn/favicon/${getDomain(item.url)}.png`"
-            alt="">
-          <div v-if="item.isActive" bg-hex-469398
-            absolute left-0 w-4px h-45px></div>
-        </div>
+    <div flex flex-col bg-hex-f0f2f5 pt-5px pb-3px>
+      <div :style="{height: `calc(100vh - ${SETTING_HEIGHT}px)`}" box-border overflow-hidden>
+        <Sidebar :services="services.displayServices" @change="changeWebView" />
       </div>
-      <div flex-1 w-65px>
-      </div>
+      <Setting :settings="settings" />
     </div>
     <div class="w-100% h-100%">
       <div class="w-100% h-100%" v-show="service.isActive"
