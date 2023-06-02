@@ -1,6 +1,4 @@
-import type { ReservedProps, WebViewHTMLAttributes } from 'vue'
-
-export type ElectronWebView = (WebViewHTMLAttributes & ReservedProps)
+export type ElectronWebView = Electron.WebviewTag
 
 export interface Service {
   id: string

@@ -7,6 +7,10 @@ import Sidebar from '../components/Sidebar.vue'
 import Setting from '../components/Setting.vue'
 
 const services = useServiceStore()
+
+// 初始是否渲染
+const urlRendered = ref<Set<string>>(new Set())
+
 function changeWebView(service: Service) {
   // console.log(item.url)
   services.setActive({ serviceId: service.id })
@@ -33,16 +37,16 @@ const settings = [
 //   { src: 'https://web.telegram.org/a/', preload: true, name: 'Telegram' },
 // ]
 
-// 初始是否渲染
-const urlRendered = ref<Set<string>>(new Set())
-
 const SETTING_HEIGHT = 45 * settings.length + 60
 </script>
 
 <template>
   <div class="home" flex>
     <div flex flex-col bg-hex-f0f2f5 pt-5px pb-3px>
-      <div :style="{ height: `calc(100vh - ${SETTING_HEIGHT}px)` }" box-border overflow-hidden>
+      <div
+        :style="{ height: `calc(100vh - ${SETTING_HEIGHT}px)` }" box-border
+        overflow-hidden
+      >
         <Sidebar :services="services.displayServices" @change="changeWebView" />
       </div>
       <Setting :settings="settings" />
@@ -50,11 +54,14 @@ const SETTING_HEIGHT = 45 * settings.length + 60
     <div class="w-100% h-100%">
       <div
         v-for="service in services.displayServices" v-show="service.isActive"
-        class="w-100% h-100%"
+        :key="service.id" class="w-100% h-100%"
       >
         <WebView
           v-if="service.preload || urlRendered.has(service.id)"
           :service="service"
+          @set-webview="(webView) => (service._webview = webView)"
+          @did-finish-load="() => service.isLoading = false"
+          @did-fail-load="() => service.isError = true"
         />
       </div>
     </div>
