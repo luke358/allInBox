@@ -29,6 +29,7 @@
     "@iconify-json/carbon": "^1.1.17",
     "@iconify-json/ic": "^1.1.13",
     "@iconify-json/ion": "^1.1.10",
+    "@vueuse/core": "^10.1.2",
     "custom-electron-titlebar": "^4.2.2",
     "normalize.css": "^8.0.1",
     "pinia": "^2.1.3",
