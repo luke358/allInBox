@@ -6,16 +6,15 @@ const services = useServiceStore()
 </script>
 
 <template>
-  <div grid="~ cols-4">
+  <div grid="~ cols-4 gap-20px">
     <el-popover
       v-for="service in services.displayServices" :key="service.id"
-      placement="top-start" :title="service.name" :width="200" trigger="hover"
+      placement="bottom-start" :title="service.name" :width="200" trigger="hover"
       :content="`this is service ${service.name}`"
     >
       <template #reference>
         <div
-          hover:bg-gray-100 cursor-pointer p5px rd-5px flex justify-center
-          items-center
+          hover:bg-gray-100 cursor-pointer pl-20px pr-8px py-15px rd-5px flex items-center
           @click="emits('handleService', service)"
         >
           <img w-40px h-40px src="../assets/vite.svg" alt="">

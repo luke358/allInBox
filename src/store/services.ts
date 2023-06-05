@@ -1,6 +1,7 @@
 // @ts-check
 import { defineStore } from 'pinia'
 import type { Service, ServiceStore } from '../types'
+import { LinkHandling } from '../types'
 
 export const useServiceStore = defineStore({
   id: 'services',
@@ -21,6 +22,15 @@ export const useServiceStore = defineStore({
         isFirstLoad: true,
         isError: false,
         isLoading: true,
+        enable: true,
+        isNotificationEnabled: true,
+        isSoundsEnabled: true,
+        isShowNameInTabEnabled: true,
+        isHibernateEnabled: false,
+
+        isUnreadInTabEnabled: true,
+        isUnreadInGlobalEnabled: true,
+        linkHandling: LinkHandling.Default,
       },
       {
         url: 'https://web.telegram.org/a/',
@@ -37,6 +47,16 @@ export const useServiceStore = defineStore({
         isFirstLoad: true,
         isError: false,
         isLoading: true,
+        isNotificationEnabled: true,
+        enable: true,
+        isSoundsEnabled: true,
+        isShowNameInTabEnabled: true,
+        isHibernateEnabled: false,
+
+        isUnreadInTabEnabled: true,
+        isUnreadInGlobalEnabled: true,
+        linkHandling: LinkHandling.Default,
+
       },
       {
         url: 'https://www.aliyundrive.com/drive',
@@ -53,6 +73,16 @@ export const useServiceStore = defineStore({
         isFirstLoad: true,
         isError: false,
         isLoading: true,
+        isNotificationEnabled: true,
+        enable: true,
+        isSoundsEnabled: true,
+        isShowNameInTabEnabled: true,
+        isHibernateEnabled: false,
+
+        isUnreadInTabEnabled: true,
+        isUnreadInGlobalEnabled: true,
+        linkHandling: LinkHandling.Default,
+
       },
     ],
   }),
@@ -76,6 +106,11 @@ export const useServiceStore = defineStore({
     },
     reloadActive({ serviceId }: { serviceId: string }) {
 
+    },
+    addService(service: Service) {
+      const idx = this.allServices.findIndex(_service => _service.id === service.id)
+      if (idx === -1)
+        this.allServices.push(service)
     },
   },
 })
