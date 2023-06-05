@@ -1,9 +1,14 @@
 import { rmSync } from 'node:fs'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+
+// eslint-disable-next-line import/default
 import electron from 'vite-plugin-electron'
 import renderer from 'vite-plugin-electron-renderer'
 import UnoCSS from 'unocss/vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 import pkg from './package.json'
 
@@ -19,12 +24,19 @@ export default defineConfig(({ command }) => {
     plugins: [
       UnoCSS(),
       vue(),
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+      }),
       electron([
         {
           // Main-Process entry file of the Electron App.
           entry: 'electron/main/index.ts',
           onstart(options) {
             if (process.env.VSCODE_DEBUG)
+              // eslint-disable-next-line no-console
               console.log(/* For `.vscode/.debug.script.mjs` */'[startup] Electron App')
             else
               options.startup()

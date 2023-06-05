@@ -7,7 +7,7 @@ import { getDomain } from '../utils'
 import { useScrollTo } from '../composables/scroll'
 
 const { services } = defineProps<{ services: Service[] }>()
-const emits = defineEmits(['change'])
+const emits = defineEmits(['change', 'addService'])
 const sideBarRef = ref<HTMLDivElement>()
 const sideBarMenuRef = ref<HTMLDivElement>()
 
@@ -41,7 +41,7 @@ const showArrow = computed(() => (services.length * 55 + 50) > height.value)
       w-30px bg-gray hover:bg-black @click="scrollBottom"
     />
     <div mt-auto w-35px h-50px flex items-center justify-center flex-content-end>
-      <div b="~ dashed" rd-5px hover:b-hex-469398 cursor-pointer>
+      <div b="~ dashed" rd-5px hover:b-hex-469398 cursor-pointer @click="emits('addService')">
         <div i-carbon-add w-30px h-30px hover:c-hex-469398 />
       </div>
     </div>

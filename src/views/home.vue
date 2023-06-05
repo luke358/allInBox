@@ -5,6 +5,8 @@ import { useServiceStore } from '../store/services'
 import type { Service } from '../types'
 import Sidebar from '../components/Sidebar.vue'
 import Setting from '../components/Setting.vue'
+import AddServiceDrawer from '../components/AddServiceDrawer.vue'
+import ServiceList from '../components/ServiceList.vue'
 
 const services = useServiceStore()
 
@@ -36,6 +38,7 @@ const settings = [
 //   { src: 'https://discord.com/app', preload: true, name: 'Discord' },
 //   { src: 'https://web.telegram.org/a/', preload: true, name: 'Telegram' },
 // ]
+const drawer = ref(false)
 
 const SETTING_HEIGHT = 45 * settings.length + 60
 </script>
@@ -47,7 +50,10 @@ const SETTING_HEIGHT = 45 * settings.length + 60
         :style="{ height: `calc(100vh - ${SETTING_HEIGHT}px)` }" box-border
         overflow-hidden
       >
-        <Sidebar :services="services.displayServices" @change="changeWebView" />
+        <Sidebar
+          :services="services.displayServices" @add-service="drawer = true"
+          @change="changeWebView"
+        />
       </div>
       <Setting :settings="settings" />
     </div>
@@ -66,6 +72,11 @@ const SETTING_HEIGHT = 45 * settings.length + 60
       </div>
     </div>
   </div>
+  <AddServiceDrawer v-model="drawer">
+    <template #default="{ openInnerDrawer }">
+      <ServiceList @handle-service="openInnerDrawer" />
+    </template>
+  </AddServiceDrawer>
 </template>
 
 <style lang="scss" scoped>
