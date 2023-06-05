@@ -12,7 +12,8 @@ defineProps<{ service: Service }>()
     items-center
     justify-center
   >
-    Loading
+    Webview happen error, click
+    <el-button>reload</el-button> to reload
   </div>
 </template>
 

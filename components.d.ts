@@ -29,6 +29,7 @@ declare module '@vue/runtime-core' {
     Setting: typeof import('./src/components/Setting.vue')['default']
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
     WebView: typeof import('./src/components/WebView.vue')['default']
+    WebViewError: typeof import('./src/components/WebViewError.vue')['default']
     WebViewLoad: typeof import('./src/components/WebViewLoad.vue')['default']
   }
 }
