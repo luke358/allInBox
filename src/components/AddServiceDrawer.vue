@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { cloneDeep } from 'lodash-es'
-import { nanoid } from 'nanoid'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useVModel } from '@vueuse/core'
 import type { Service } from '../types'
 import { LinkHandling } from '../types'
 import { useServiceStore } from '../store/services'
+import { createInitialService } from '../utils'
 
 const props = defineProps<{
   modelValue: boolean
@@ -17,36 +17,11 @@ const visible = useVModel(props, 'modelValue', emit)
 const services = useServiceStore()
 
 const innerDrawer = ref(false)
-const initialService: Service = {
-  url: '',
-  preload: false,
-  name: 'Custom app',
-  _webview: undefined,
-  lastUsed: Date.now(),
-  lastHibernated: Date.now(),
-  isActive: false,
-  timer: null,
-  isMuted: false,
-  id: nanoid(),
-  iconUrl: 'xxx',
-  isFirstLoad: true,
-  isError: false,
-  isLoading: true,
-  enable: true,
-  isNotificationEnabled: true,
-  isSoundsEnabled: true,
-  isShowNameInTabEnabled: true,
-  isHibernateEnabled: false,
 
-  isUnreadInTabEnabled: true,
-  isUnreadInGlobalEnabled: true,
-  linkHandling: LinkHandling.Default,
-
-}
-const service = ref<Service>(cloneDeep(initialService))
+const service = ref<Service>(cloneDeep(createInitialService()))
 function openInnerDrawer(s?: Service) {
   innerDrawer.value = true
-  service.value = cloneDeep(s || initialService)
+  service.value = cloneDeep(s || createInitialService())
 }
 
 const rules = reactive<FormRules>({
@@ -65,7 +40,7 @@ async function submit(formEl: FormInstance | undefined) {
     if (!valid)
       return
 
-    emit('update:modelValue', false)
+    visible.value = false
     setTimeout(() => {
       innerDrawer.value = false
     }, 1000)
