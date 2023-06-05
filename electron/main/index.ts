@@ -49,6 +49,7 @@ setupTitlebar()
 // app.commandLine.appendSwitch('widevine-cdm-path', '/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Versions/113.0.5672.126/Libraries/WidevineCdm/_platform_specific/mac_x64')
 // app.commandLine.appendSwitch('widevine-cdm-version', '113.0.5672.126')
 
+let allowQuitting = false
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
@@ -64,6 +65,16 @@ async function createWindow() {
       webviewTag: true,
       plugins: true,
     },
+  })
+
+  win.on('close', (event) => {
+    if (allowQuitting === false) {
+      event.preventDefault()
+      win.hide()
+    }
+    else {
+      win = undefined
+    }
   })
 
   if (process.env.VITE_DEV_SERVER_URL) { // electron-vite-vue#298
@@ -109,12 +120,13 @@ app.on('second-instance', () => {
 })
 
 app.on('activate', () => {
-  const allWindows = BrowserWindow.getAllWindows()
-  if (allWindows.length)
-    allWindows[0].focus()
-  else
+  if (win === undefined)
     createWindow()
+  else
+    win.show()
 })
+
+app.on('before-quit', () => (allowQuitting = true))
 
 // New window example arg: new windows url
 ipcMain.handle('open-win', (_, arg) => {
