@@ -1,17 +1,21 @@
 <script lang="ts" setup>
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-import { defineModel, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { nanoid } from 'nanoid'
 import type { FormInstance, FormRules } from 'element-plus'
+import { useVModel } from '@vueuse/core'
 import type { Service } from '../types'
 import { LinkHandling } from '../types'
 import { useServiceStore } from '../store/services'
 
-const emits = defineEmits(['update:modelValue'])
+const props = defineProps<{
+  modelValue: boolean
+}>()
+const emit = defineEmits(['update:modelValue'])
+const visible = useVModel(props, 'modelValue', emit)
+
 const services = useServiceStore()
-const modelValue = defineModel<boolean>('modelValue', { default: false })
+
 const innerDrawer = ref(false)
 const initialService: Service = {
   url: '',
@@ -61,7 +65,7 @@ async function submit(formEl: FormInstance | undefined) {
     if (!valid)
       return
 
-    emits('update:modelValue', false)
+    emit('update:modelValue', false)
     setTimeout(() => {
       innerDrawer.value = false
     }, 1000)
@@ -82,7 +86,7 @@ function isUrl(rule: any, value: any, callback: any) {
 
 <template>
   <el-drawer
-    v-bind="$attrs" v-model="modelValue" title="添加服务" size="70%"
+    v-model="visible" title="添加服务" size="70%"
     class="pt-28px!"
   >
     <template #header>
