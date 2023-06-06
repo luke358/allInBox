@@ -43,7 +43,7 @@ function handleMenu(service: Service, index: number) {
       v-if="showArrow" cursor-pointer i-ic-round-keyboard-arrow-up h-30px
       w-30px bg-gray hover:bg-black @click="scrollTop"
     />
-    <div ref="sideBarMenuRef" class="side-bar-menu" overflow-scroll flex-1>
+    <div ref="sideBarMenuRef" class="side-bar-menu w-100%" overflow-scroll flex-1>
       <el-popover
         v-for="(service, index) in services" :key="service.id"
         :visible="visibleServiceMenuRef?.id === service.id" placement="right-start"
@@ -85,8 +85,8 @@ function handleMenu(service: Service, index: number) {
         </template>
         <template #reference>
           <div
-            class="rd-50%" mb-10px w-45px h-45px flex items-center
-            justify-center cursor-pointer
+            class="rd-50% w-100%" h-45px mb-10px flex items-center
+            justify-center cursor-pointer relative
             @click="() => emits('change', service)"
             @contextmenu.prevent="handleMenu(service, index)"
           >
