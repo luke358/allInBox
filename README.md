@@ -5,8 +5,16 @@
 
 ## Screenshot
 
-![AllInOne](screenshots/AllInOne.png)
+![AllInOne](screenshots/home.png)
 
+### Add Service
+![AllInOne](screenshots/add-service.png)
+
+### Add Custom Service
+![AllInOne](screenshots/add-custom-service.png)
+
+### Hibernate Service
+![AllInOne](screenshots/hibernate.png)
 ## Services available
 <string>In process</string>
 <br>
@@ -14,9 +22,15 @@
 ## TODO
 
 - [x] services store
-- [ ] service configuration
-- [ ] hibernation service
-- [ ] wake up service
+- [x] service configuration
+- [x] hibernation service
+- [x] wake up service
+- [x] add custom service
+- [ ] global setting
+- [ ] search local service
+- [ ] backend service
+- [ ] search remote service
+- [ ] persistent Data
 - [ ] 宫格聚合
 
 ## Features
