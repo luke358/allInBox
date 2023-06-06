@@ -108,8 +108,12 @@ export const useServiceStore = defineStore({
       const service = this.allServices.find(service => service.id === serviceId)
       service && (service.isActive = true)
     },
-    reloadActive({ serviceId }: { serviceId: string }) {
-
+    reload({ serviceId }: { serviceId: string }) {
+      const service = this.allServices.find(service => service.id === serviceId)
+      if (service) {
+        service.isLoading = true
+        service._webview?.reload()
+      }
     },
     addService(service: Service) {
       const idx = this.allServices.findIndex(_service => _service.id === service.id)

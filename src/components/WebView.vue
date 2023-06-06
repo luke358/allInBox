@@ -25,6 +25,7 @@ onBeforeMount(() => {
 <template>
   <div class="webViewContainer w-100% h-100% overflow-hidden" relative>
     <webview
+      v-show="!service.isLoading"
       v-if="service.enable" :ref="(_webviewRef) => {
         webViewRef = _webviewRef as unknown as ElectronWebView
         emits('setWebview', _webviewRef)
@@ -33,7 +34,7 @@ onBeforeMount(() => {
       webpreferences="spellcheck=1, contextIsolation=1`"
       :disablewebsecurity="true"
     />
-    <WebviewEnable v-else-if="!service.enable" :service="service" />
+    <WebviewEnable v-if="!service.enable" :service="service" />
     <WebViewError v-else-if="service.isError" :service="service" />
     <WebViewLoad v-else-if="service.isLoading" :service="service" />
   </div>

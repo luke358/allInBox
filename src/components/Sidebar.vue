@@ -5,9 +5,11 @@ import { useElementSize, useVModel } from '@vueuse/core'
 import type { Service } from '../types'
 import { getDomain } from '../utils'
 import { useScrollTo } from '../composables/scroll'
+import { useServiceStore } from '../store/services'
 
 const props = defineProps<{ services: Service[] }>()
 const emits = defineEmits(['change', 'addService', 'update:services'])
+const serviceStore = useServiceStore()
 const services = useVModel(props, 'services', emits)
 
 const sideBarRef = ref<HTMLDivElement>()
@@ -55,8 +57,10 @@ function handleMenu(service: Service, index: number) {
             @blur="visibleServiceMenuRef = null"
           >
             <div flex justify-between mb-10px>
-              <div>{{ service.name }}</div>
-              <div> Reload </div>
+              <div font-600 color-black>
+                {{ service.name }}
+              </div>
+              <div class="i-carbon-update-now" cursor-pointer bg-hex-469398 mr-10px @click="serviceStore.reload({ serviceId: service.id })" />
             </div>
             <div>
               <div flex justify-between items-center>
