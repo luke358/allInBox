@@ -51,7 +51,7 @@ const SETTING_HEIGHT = 45 * settings.length + 60
         overflow-hidden
       >
         <Sidebar
-          :services="services.displayServices" @add-service="drawer = true"
+          v-model:services="services.displayServices" @add-service="drawer = true"
           @change="changeWebView"
         />
       </div>

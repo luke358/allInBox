@@ -10,6 +10,7 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AddServiceDrawer: typeof import('./src/components/AddServiceDrawer.vue')['default']
+    ContextMenuPopover: typeof import('./src/components/ContextMenuPopover.vue')['default']
     ElAffix: typeof import('element-plus/es')['ElAffix']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
@@ -23,12 +24,14 @@ declare module '@vue/runtime-core' {
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElSelect: typeof import('element-plus/es')['ElSelect']
+    ElSwitch: typeof import('element-plus/es')['ElSwitch']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ServiceList: typeof import('./src/components/ServiceList.vue')['default']
     Setting: typeof import('./src/components/Setting.vue')['default']
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
     WebView: typeof import('./src/components/WebView.vue')['default']
+    WebviewEnable: typeof import('./src/components/WebviewEnable.vue')['default']
     WebViewError: typeof import('./src/components/WebViewError.vue')['default']
     WebViewLoad: typeof import('./src/components/WebViewLoad.vue')['default']
   }
