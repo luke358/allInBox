@@ -99,6 +99,10 @@ export const useServiceStore = defineStore({
     hibernate({ serviceId }: { serviceId: string }) {
       // TODO:
     },
+    enable({ serviceId }: { serviceId: string }) {
+      const service = this.allServices.find(service => service.id === serviceId)
+      service && (service.enable = true)
+    },
     setActive({ serviceId }: { serviceId: string }) {
       this.allServices.forEach(service => service.isActive = false)
       const service = this.allServices.find(service => service.id === serviceId)

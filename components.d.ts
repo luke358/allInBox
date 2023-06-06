@@ -11,10 +11,8 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AddServiceDrawer: typeof import('./src/components/AddServiceDrawer.vue')['default']
     ContextMenuPopover: typeof import('./src/components/ContextMenuPopover.vue')['default']
-    ElAffix: typeof import('element-plus/es')['ElAffix']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
-    ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElDrawer: typeof import('element-plus/es')['ElDrawer']
     ElForm: typeof import('element-plus/es')['ElForm']
