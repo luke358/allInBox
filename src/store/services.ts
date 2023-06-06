@@ -1,6 +1,8 @@
 // @ts-check
 import { defineStore } from 'pinia'
 import { nanoid } from 'nanoid'
+import ms from 'ms'
+import { debounce } from 'lodash-es'
 import type { Service, ServiceStore } from '../types'
 import { LinkHandling } from '../types'
 
@@ -14,7 +16,7 @@ export const useServiceStore = defineStore({
         name: 'Discord',
         _webview: undefined,
         lastUsed: Date.now(),
-        lastHibernated: Date.now(),
+        lastHibernated: null,
         isActive: false,
         timer: null,
         isMuted: false,
@@ -28,6 +30,7 @@ export const useServiceStore = defineStore({
         isSoundsEnabled: true,
         isShowNameInTabEnabled: true,
         isHibernateEnabled: false,
+        isHibernating: false,
 
         isUnreadInTabEnabled: true,
         isUnreadInGlobalEnabled: true,
@@ -39,7 +42,7 @@ export const useServiceStore = defineStore({
         name: 'Telegram',
         _webview: undefined,
         lastUsed: Date.now(),
-        lastHibernated: Date.now(),
+        lastHibernated: null,
         isActive: false,
         timer: null,
         isMuted: false,
@@ -53,6 +56,7 @@ export const useServiceStore = defineStore({
         isSoundsEnabled: true,
         isShowNameInTabEnabled: true,
         isHibernateEnabled: false,
+        isHibernating: false,
 
         isUnreadInTabEnabled: true,
         isUnreadInGlobalEnabled: true,
@@ -65,7 +69,7 @@ export const useServiceStore = defineStore({
         name: '阿里云盘',
         _webview: undefined,
         lastUsed: Date.now(),
-        lastHibernated: Date.now(),
+        lastHibernated: null,
         isActive: false,
         timer: null,
         isMuted: false,
@@ -78,7 +82,8 @@ export const useServiceStore = defineStore({
         enable: true,
         isSoundsEnabled: true,
         isShowNameInTabEnabled: true,
-        isHibernateEnabled: false,
+        isHibernateEnabled: true,
+        isHibernating: false,
 
         isUnreadInTabEnabled: true,
         isUnreadInGlobalEnabled: true,
@@ -86,28 +91,68 @@ export const useServiceStore = defineStore({
 
       },
     ],
+    teardown: null,
   }),
   getters: {
     displayServices(): Service[] {
       // return this.allServices.filter(() => false)
       return this.allServices as Service[]
     },
+    enabledServices(): Service[] {
+      return this.allServices.filter(service => service.enable)
+    },
   },
   actions: {
+    serviceMaintenanceTick() {
+      this.serviceMaintenance()
+      this.teardown = debounce(this.serviceMaintenanceTick, ms('10s'))
+      this.teardown()
+    },
+    serviceMaintenance() {
+      for (const service of this.enabledServices) {
+        if (!service.isActive) {
+          if (
+            !service.lastHibernated
+            && Date.now() - service.lastUsed
+              > ms('5m')
+          ) {
+            // If service is stale, hibernate it.
+            this.hibernate({ serviceId: service.id })
+          }
+        }
+      }
+    },
     awake({ serviceId }: { serviceId: string }) {
+      const service = this.allServices.find(service => service.id === serviceId)
 
+      if (service) {
+        service.lastHibernated = null
+        service.isHibernating = false
+        service.lastUsed = Date.now()
+      }
     },
     hibernate({ serviceId }: { serviceId: string }) {
-      // TODO:
+      const service = this.allServices.find(service => service.id === serviceId)
+      if (!service?.isHibernateEnabled)
+        return
+
+      service.isHibernating = true
+      service.lastHibernated = Date.now()
     },
     enable({ serviceId }: { serviceId: string }) {
       const service = this.allServices.find(service => service.id === serviceId)
       service && (service.enable = true)
     },
     setActive({ serviceId }: { serviceId: string }) {
-      this.allServices.forEach(service => service.isActive = false)
+      this.allServices.forEach((service) => {
+        service.isActive = false
+        service.lastUsed = Date.now()
+      })
       const service = this.allServices.find(service => service.id === serviceId)
-      service && (service.isActive = true)
+      if (service) {
+        service.lastUsed = Date.now()
+        service.isActive = true
+      }
     },
     reload({ serviceId }: { serviceId: string }) {
       const service = this.allServices.find(service => service.id === serviceId)

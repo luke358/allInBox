@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import WebView from '../components/WebView.vue'
+import ServiceView from '../components/ServiceView.vue'
 import { useServiceStore } from '../store/services'
 import type { Service } from '../types'
 import Sidebar from '../components/Sidebar.vue'
@@ -11,12 +11,12 @@ import ServiceList from '../components/ServiceList.vue'
 const services = useServiceStore()
 
 // 初始是否渲染
-const urlRendered = ref<Set<string>>(new Set())
+const serviceUsed = ref<Set<string>>(new Set())
 
 function changeWebView(service: Service) {
   // console.log(item.url)
   services.setActive({ serviceId: service.id })
-  urlRendered.value.add(service.id)
+  serviceUsed.value.add(service.id)
 }
 const settings = [
   {
@@ -62,11 +62,11 @@ const SETTING_HEIGHT = 45 * settings.length + 60
         v-for="service in services.displayServices" v-show="service.isActive"
         :key="service.id" class="w-100% h-100%"
       >
-        <WebView
-          v-if="service.preload || urlRendered.has(service.id)"
+        <ServiceView
+          v-if="service.preload || serviceUsed.has(service.id)"
           :service="service"
           @set-webview="(webView) => (service._webview = webView)"
-          @did-finish-load="() => { service.isLoading = false;service.isError = false }"
+          @did-finish-load="() => { service.isLoading = false;service.isError = false; }"
           @did-fail-load="() => service.isError = true"
         />
       </div>

@@ -1,9 +1,6 @@
 <script lang='ts' setup>
 import { onBeforeMount, onMounted, ref } from 'vue'
 import type { ElectronWebView, Service } from '../types'
-import WebViewLoad from './WebViewLoad.vue'
-import WebViewError from './WebViewError.vue'
-import WebviewEnable from './WebviewEnable.vue'
 
 const { service } = defineProps<{ service: Service }>()
 
@@ -23,22 +20,16 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <div class="webViewContainer w-100% h-100% overflow-hidden" relative>
-    <webview
-      v-show="!service.isLoading"
-      v-if="service.enable" :ref="(_webviewRef) => {
-        webViewRef = _webviewRef as unknown as ElectronWebView
-        emits('setWebview', _webviewRef)
-      }" autosize :src="service.url" style="display:inline-flex;"
-      class="w-100% h-100%" allowpopups
-      webpreferences="spellcheck=1, contextIsolation=1`"
-      :disablewebsecurity="true"
-      :partition="service.id"
-    />
-    <WebviewEnable v-if="!service.enable" :service="service" />
-    <WebViewError v-else-if="service.isError" :service="service" />
-    <WebViewLoad v-else-if="service.isLoading" :service="service" />
-  </div>
+  <webview
+    :ref="(_webviewRef) => {
+      webViewRef = _webviewRef as unknown as ElectronWebView
+      emits('setWebview', _webviewRef)
+    }" autosize :src="service.url" style="display:inline-flex;"
+    class="w-100% h-100%" allowpopups
+    webpreferences="spellcheck=1, contextIsolation=1`"
+    :disablewebsecurity="true"
+    :partition="service.id"
+  />
 </template>
 
 <style scoped></style>

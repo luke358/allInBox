@@ -99,6 +99,9 @@ function handleMenu(service: Service, index: number) {
               v-if="service.isActive" bg-hex-469398 absolute left-0 w-4px
               h-45px
             />
+            <span v-if="service.isHibernateEnabled && service.isHibernating" text-30px color-gray top--10px absolute left-5px>
+              •
+            </span>
           </div>
         </template>
       </el-popover>

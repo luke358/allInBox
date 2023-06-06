@@ -26,11 +26,14 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ServiceList: typeof import('./src/components/ServiceList.vue')['default']
+    ServiceView: typeof import('./src/components/ServiceView.vue')['default']
     Setting: typeof import('./src/components/Setting.vue')['default']
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
     WebView: typeof import('./src/components/WebView.vue')['default']
     WebviewEnable: typeof import('./src/components/WebviewEnable.vue')['default']
+    WebViewEnable: typeof import('./src/components/WebViewEnable.vue')['default']
     WebViewError: typeof import('./src/components/WebViewError.vue')['default']
+    WebViewHibernate: typeof import('./src/components/WebViewHibernate.vue')['default']
     WebViewLoad: typeof import('./src/components/WebViewLoad.vue')['default']
   }
 }

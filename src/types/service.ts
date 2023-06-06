@@ -1,3 +1,5 @@
+import type { DebouncedFunc } from 'lodash-es'
+
 export type ElectronWebView = Electron.WebviewTag
 
 export enum LinkHandling {
@@ -19,6 +21,7 @@ export interface Service {
   isSoundsEnabled: boolean
   isShowNameInTabEnabled: boolean
   isHibernateEnabled: boolean
+  isHibernating: boolean
 
   isUnreadInTabEnabled: boolean
   isUnreadInGlobalEnabled: boolean
@@ -26,7 +29,7 @@ export interface Service {
   preload: boolean
   timer: NodeJS.Timeout | null
   lastUsed: number
-  lastHibernated: number
+  lastHibernated: number | null
 
   isActive: boolean
   isMuted: boolean
@@ -40,4 +43,5 @@ export interface Service {
 
 export interface ServiceStore {
   allServices: Service[]
+  teardown: DebouncedFunc<() => void> | null
 }
