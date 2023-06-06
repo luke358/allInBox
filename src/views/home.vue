@@ -66,7 +66,7 @@ const SETTING_HEIGHT = 45 * settings.length + 60
           v-if="service.preload || urlRendered.has(service.id)"
           :service="service"
           @set-webview="(webView) => (service._webview = webView)"
-          @did-finish-load="() => service.isLoading = false"
+          @did-finish-load="() => { service.isLoading = false;service.isError = false }"
           @did-fail-load="() => service.isError = true"
         />
       </div>

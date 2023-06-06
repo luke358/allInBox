@@ -6,7 +6,7 @@ import { useVModel } from '@vueuse/core'
 import type { Service } from '../types'
 import { LinkHandling } from '../types'
 import { useServiceStore } from '../store/services'
-import { createInitialService } from '../utils'
+import { createInitialService, getDomain } from '../utils'
 
 const props = defineProps<{
   modelValue: boolean
@@ -87,7 +87,11 @@ function isUrl(rule: any, value: any, callback: any) {
       >
         <template #header>
           <div flex items-center>
-            <img w-40px h-40px src="../assets/vite.svg" alt="">
+            <img
+              w-40px h-40px
+              :src="`https://api.iowen.cn/favicon/${getDomain(service.url)}.png`"
+              alt=""
+            >
             <div ml-10px>
               {{ service?.name }}
             </div>

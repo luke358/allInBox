@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useServiceStore } from '../store/services'
+import { getDomain } from '../utils'
 
 const emits = defineEmits(['handleService'])
 const services = useServiceStore()
@@ -17,7 +18,11 @@ const services = useServiceStore()
           hover:bg-gray-100 cursor-pointer pl-20px pr-8px py-15px rd-5px flex items-center
           @click="emits('handleService', service)"
         >
-          <img w-40px h-40px src="../assets/vite.svg" alt="">
+          <img
+            w-40px h-40px
+            :src="`https://api.iowen.cn/favicon/${getDomain(service.url)}.png`"
+            alt=""
+          >
           <div max-w-100px text-truncate ml-10px>
             {{ service.name }}
           </div>

@@ -1,5 +1,6 @@
 // @ts-check
 import { defineStore } from 'pinia'
+import { nanoid } from 'nanoid'
 import type { Service, ServiceStore } from '../types'
 import { LinkHandling } from '../types'
 
@@ -116,9 +117,8 @@ export const useServiceStore = defineStore({
       }
     },
     addService(service: Service) {
-      const idx = this.allServices.findIndex(_service => _service.id === service.id)
-      if (idx === -1)
-        this.allServices.push(service)
+      service.id = nanoid()
+      this.allServices.push(service)
     },
   },
 })
