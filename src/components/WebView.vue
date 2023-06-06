@@ -33,6 +33,7 @@ onBeforeMount(() => {
       class="w-100% h-100%" allowpopups
       webpreferences="spellcheck=1, contextIsolation=1`"
       :disablewebsecurity="true"
+      :partition="service.id"
     />
     <WebviewEnable v-if="!service.enable" :service="service" />
     <WebViewError v-else-if="service.isError" :service="service" />
