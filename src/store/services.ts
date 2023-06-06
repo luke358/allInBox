@@ -132,6 +132,7 @@ export const useServiceStore = defineStore({
         service.lastHibernated = null
         service.isHibernating = false
         service.lastUsed = Date.now()
+        service.isLoading = true
       }
     },
     hibernate({ serviceId }: { serviceId: string }) {
@@ -144,7 +145,10 @@ export const useServiceStore = defineStore({
     },
     enable({ serviceId }: { serviceId: string }) {
       const service = this.allServices.find(service => service.id === serviceId)
-      service && (service.enable = true)
+      if (service) {
+        service.enable = true
+        this.awake({ serviceId })
+      }
     },
     setActive({ serviceId }: { serviceId: string }) {
       this.allServices.forEach((service) => {
@@ -161,6 +165,7 @@ export const useServiceStore = defineStore({
       const service = this.allServices.find(service => service.id === serviceId)
       if (service) {
         service.isLoading = true
+        this.awake({ serviceId })
         service._webview?.reload()
       }
     },

@@ -1,7 +1,9 @@
 <script lang='ts' setup>
+import { useServiceStore } from '../store/services'
 import type { Service } from '../types'
 
 defineProps<{ service: Service }>()
+const services = useServiceStore()
 </script>
 
 <template>
@@ -13,7 +15,9 @@ defineProps<{ service: Service }>()
     justify-center
   >
     Webview happen error, click
-    <el-button>enabled</el-button> to enabled
+    <el-button @click="services.enable({ serviceId: service.id })">
+      enabled
+    </el-button> to enabled
   </div>
 </template>
 
