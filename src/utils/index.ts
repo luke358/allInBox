@@ -32,6 +32,7 @@ export function createInitialService() {
     isShowNameInTabEnabled: true,
     isHibernateEnabled: false,
     isHibernating: false,
+    isMediaPlaying: false,
 
     isUnreadInTabEnabled: true,
     isUnreadInGlobalEnabled: true,

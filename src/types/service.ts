@@ -36,6 +36,7 @@ export interface Service {
   isFirstLoad: boolean
   isError: boolean
   isLoading: boolean
+  isMediaPlaying: boolean
 
   linkHandling: LinkHandling
   team?: string

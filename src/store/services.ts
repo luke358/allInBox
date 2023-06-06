@@ -31,6 +31,7 @@ export const useServiceStore = defineStore({
         isShowNameInTabEnabled: true,
         isHibernateEnabled: false,
         isHibernating: false,
+        isMediaPlaying: false,
 
         isUnreadInTabEnabled: true,
         isUnreadInGlobalEnabled: true,
@@ -57,6 +58,7 @@ export const useServiceStore = defineStore({
         isShowNameInTabEnabled: true,
         isHibernateEnabled: false,
         isHibernating: false,
+        isMediaPlaying: false,
 
         isUnreadInTabEnabled: true,
         isUnreadInGlobalEnabled: true,
@@ -84,6 +86,7 @@ export const useServiceStore = defineStore({
         isShowNameInTabEnabled: true,
         isHibernateEnabled: true,
         isHibernating: false,
+        isMediaPlaying: false,
 
         isUnreadInTabEnabled: true,
         isUnreadInGlobalEnabled: true,
@@ -133,7 +136,7 @@ export const useServiceStore = defineStore({
     },
     hibernate({ serviceId }: { serviceId: string }) {
       const service = this.allServices.find(service => service.id === serviceId)
-      if (!service?.isHibernateEnabled)
+      if (!service?.isHibernateEnabled && !service?.isMediaPlaying)
         return
 
       service.isHibernating = true
@@ -164,6 +167,16 @@ export const useServiceStore = defineStore({
     addService(service: Service) {
       service.id = nanoid()
       this.allServices.push(service)
+    },
+    didMediaPlaying({ serviceId }: { serviceId: string }) {
+      const service = this.allServices.find(service => service.id === serviceId)
+      if (service)
+        service.isMediaPlaying = true
+    },
+    didMediaPaused({ serviceId }: { serviceId: string }) {
+      const service = this.allServices.find(service => service.id === serviceId)
+      if (service)
+        service.isMediaPlaying = false
     },
   },
 })

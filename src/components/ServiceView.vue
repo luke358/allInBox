@@ -1,15 +1,11 @@
 <script lang='ts' setup>
 import type { Service } from '../types'
-import WebViewLoad from './WebViewLoad.vue'
 import WebViewError from './WebViewError.vue'
 import WebViewEnable from './WebViewEnable.vue'
 import WebViewHibernate from './WebViewHibernate.vue'
 import WebView from './WebView.vue'
 
 const { service } = defineProps<{ service: Service }>()
-
-// const emits = defineEmits(['setWebview', 'didFinishLoad', 'didFailLoad'])
-// const webViewRef = ref<ElectronWebView | null>(null)
 </script>
 
 <template>
@@ -20,9 +16,10 @@ const { service } = defineProps<{ service: Service }>()
       v-else-if="service.enable"
       v-bind="$attrs" :service="service"
     />
-    <WebViewEnable v-else-if="!service.enable" :service="service" />
+    <WebViewEnable v-else :service="service" />
+
+    <WebViewLoad v-if="service.isLoading" :service="service" />
     <WebViewError v-else-if="service.isError" :service="service" />
-    <WebViewLoad v-else-if="service.isLoading" :service="service" />
   </div>
 </template>
 
