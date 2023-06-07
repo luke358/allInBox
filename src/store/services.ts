@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import { nanoid } from 'nanoid'
 import ms from 'ms'
 import { debounce } from 'lodash-es'
+import { useLocalStorage } from '@vueuse/core'
 import type { Service, ServiceStore } from '../types'
 import { LinkHandling } from '../types'
 
@@ -93,6 +94,7 @@ export const useServiceStore = defineStore({
         linkHandling: LinkHandling.Default,
 
       },
+      ...useLocalStorage<Service[]>('custom-service', []).value,
     ],
     teardown: null,
   }),
@@ -170,7 +172,16 @@ export const useServiceStore = defineStore({
       }
     },
     addService(service: Service) {
-      service.id = nanoid()
+      // TODO: maybe use folder
+      const customAppStorage = useLocalStorage<Service[]>('custom-service', [])
+      // custom service
+      if (service.isCustom) {
+        service.id = nanoid()
+        customAppStorage.value.push(service)
+      }
+      else {
+        // TODO: save service
+      }
       this.allServices.push(service)
     },
     didMediaPlaying({ serviceId }: { serviceId: string }) {

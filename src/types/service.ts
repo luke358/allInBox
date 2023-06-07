@@ -40,6 +40,8 @@ export interface Service {
 
   linkHandling: LinkHandling
   team?: string
+
+  isCustom?: boolean
 }
 
 export interface ServiceStore {

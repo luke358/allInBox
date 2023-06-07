@@ -38,6 +38,8 @@ export function createInitialService() {
     isUnreadInGlobalEnabled: true,
     linkHandling: LinkHandling.Default,
 
+    isCustom: true,
+
   }
   return initialService
 }
