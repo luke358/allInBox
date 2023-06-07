@@ -18,7 +18,7 @@ const { service } = defineProps<{ service: Service }>()
     />
     <WebViewEnable v-else :service="service" />
 
-    <WebViewLoad v-if="service.isLoading" :service="service" />
+    <WebViewLoad v-if="service.isLoading && !(service.isHibernateEnabled && service.isHibernating)" :service="service" />
     <WebViewError v-else-if="service.isError" :service="service" />
   </div>
 </template>
