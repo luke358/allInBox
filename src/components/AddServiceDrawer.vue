@@ -40,10 +40,10 @@ async function submit(formEl: FormInstance | undefined) {
     if (!valid)
       return
 
-    visible.value = false
-    setTimeout(() => {
-      innerDrawer.value = false
-    }, 1000)
+    // visible.value = false
+    // setTimeout(() => {
+    //   innerDrawer.value = false
+    // }, 1000)
     services.addService(service.value)
   })
 }

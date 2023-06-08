@@ -10,16 +10,17 @@ const { service } = defineProps<{ service: Service }>()
 
 <template>
   <div class="webViewContainer w-100% h-100% overflow-hidden" relative>
-    <WebViewHibernate v-if="service.isHibernateEnabled && service.isHibernating" :service="service" />
+    <WebViewEnable v-if="!service.enable" :service="service" />
+    <WebViewHibernate v-else-if="service.isHibernateEnabled && service.isHibernating" :service="service" />
     <WebView
+      v-else
       v-show="!service.isLoading"
-      v-else-if="service.enable"
       v-bind="$attrs" :service="service"
     />
-    <WebViewEnable v-else :service="service" />
-
-    <WebViewLoad v-if="service.isLoading && !(service.isHibernateEnabled && service.isHibernating)" :service="service" />
-    <WebViewError v-else-if="service.isError" :service="service" />
+    <template v-if="service.enable && !(service.isHibernateEnabled && service.isHibernating)">
+      <WebViewLoad v-if="service.isLoading " :service="service" />
+      <WebViewError v-else-if="service.isError" :service="service" />
+    </template>
   </div>
 </template>
 

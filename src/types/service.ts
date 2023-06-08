@@ -27,7 +27,7 @@ export interface Service {
   isUnreadInGlobalEnabled: boolean
   // startup 强制加载
   preload: boolean
-  timer: NodeJS.Timeout | null
+  timer: number | null
   lastUsed: number
   lastHibernated: number | null
 
@@ -42,6 +42,7 @@ export interface Service {
   team?: string
 
   isCustom?: boolean
+  sorted: number
 }
 
 export interface ServiceStore {

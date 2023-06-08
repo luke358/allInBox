@@ -86,13 +86,16 @@ export default defineConfig(({ command }) => {
         },
       },
     },
-    server: process.env.VSCODE_DEBUG && (() => {
-      const url = new URL(pkg.debug.env.VITE_DEV_SERVER_URL)
-      return {
-        host: url.hostname,
-        port: +url.port,
-      }
-    })(),
+    server: {
+      proxy: {
+        '/v1': {
+          target: 'http://127.0.0.1:8080/allinboxback/',
+          changeOrigin: true,
+          rewrite: path => path.replace(/^\/v1/, ''),
+
+        },
+      },
+    },
     clearScreen: false,
   }
 })

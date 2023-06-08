@@ -10,7 +10,7 @@ export function getDomain(sourceUrl: string | undefined) {
   return domain
 }
 
-export function createInitialService() {
+export function createInitialService(isCustom = true) {
   const initialService: Service = {
     url: '',
     preload: false,
@@ -19,27 +19,30 @@ export function createInitialService() {
     lastUsed: Date.now(),
     lastHibernated: Date.now(),
     isActive: false,
-    timer: null,
     isMuted: false,
     id: nanoid(),
     iconUrl: 'xxx',
-    isFirstLoad: true,
-    isError: false,
-    isLoading: true,
+
     enable: true,
     isNotificationEnabled: true,
     isSoundsEnabled: true,
     isShowNameInTabEnabled: true,
     isHibernateEnabled: false,
     isHibernating: false,
+
+    // load config
     isMediaPlaying: false,
+    isFirstLoad: true,
+    isError: false,
+    isLoading: true,
 
     isUnreadInTabEnabled: true,
     isUnreadInGlobalEnabled: true,
     linkHandling: LinkHandling.Default,
 
-    isCustom: true,
-
+    timer: 15,
+    isCustom,
+    sorted: 0,
   }
   return initialService
 }

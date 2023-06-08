@@ -2,112 +2,55 @@
 import { defineStore } from 'pinia'
 import { nanoid } from 'nanoid'
 import ms from 'ms'
-import { debounce } from 'lodash-es'
+import { debounce, omit } from 'lodash-es'
 import { useLocalStorage } from '@vueuse/core'
+import { reactive } from 'vue'
 import type { Service, ServiceStore } from '../types'
-import { LinkHandling } from '../types'
+import { getUserServiceListByUser, saveUserService } from '../api/v1'
+import { createInitialService } from '../utils'
 
+const loadConfig = {
+  isMediaPlaying: false,
+  isFirstLoad: true,
+  isError: false,
+  isLoading: true,
+}
 export const useServiceStore = defineStore({
   id: 'services',
+  persist: {
+    paths: ['allServices'],
+  },
   state: (): ServiceStore => ({
-    allServices: [
-      {
-        url: 'https://discord.com/app',
-        preload: true,
-        name: 'Discord',
-        _webview: undefined,
-        lastUsed: Date.now(),
-        lastHibernated: null,
-        isActive: false,
-        timer: null,
-        isMuted: false,
-        id: 'test',
-        iconUrl: 'xxx',
-        isFirstLoad: true,
-        isError: false,
-        isLoading: true,
-        enable: true,
-        isNotificationEnabled: true,
-        isSoundsEnabled: true,
-        isShowNameInTabEnabled: true,
-        isHibernateEnabled: false,
-        isHibernating: false,
-        isMediaPlaying: false,
-
-        isUnreadInTabEnabled: true,
-        isUnreadInGlobalEnabled: true,
-        linkHandling: LinkHandling.Default,
-      },
-      {
-        url: 'https://web.telegram.org/a/',
-        preload: true,
-        name: 'Telegram',
-        _webview: undefined,
-        lastUsed: Date.now(),
-        lastHibernated: null,
-        isActive: false,
-        timer: null,
-        isMuted: false,
-        id: 'telegram',
-        iconUrl: 'xxx',
-        isFirstLoad: true,
-        isError: false,
-        isLoading: true,
-        isNotificationEnabled: true,
-        enable: true,
-        isSoundsEnabled: true,
-        isShowNameInTabEnabled: true,
-        isHibernateEnabled: false,
-        isHibernating: false,
-        isMediaPlaying: false,
-
-        isUnreadInTabEnabled: true,
-        isUnreadInGlobalEnabled: true,
-        linkHandling: LinkHandling.Default,
-
-      },
-      {
-        url: 'https://www.aliyundrive.com/drive',
-        preload: false,
-        name: '阿里云盘',
-        _webview: undefined,
-        lastUsed: Date.now(),
-        lastHibernated: null,
-        isActive: false,
-        timer: null,
-        isMuted: false,
-        id: 'aliyundrive',
-        iconUrl: 'xxx',
-        isFirstLoad: true,
-        isError: false,
-        isLoading: true,
-        isNotificationEnabled: true,
-        enable: true,
-        isSoundsEnabled: true,
-        isShowNameInTabEnabled: true,
-        isHibernateEnabled: true,
-        isHibernating: false,
-        isMediaPlaying: false,
-
-        isUnreadInTabEnabled: true,
-        isUnreadInGlobalEnabled: true,
-        linkHandling: LinkHandling.Default,
-
-      },
-      ...useLocalStorage<Service[]>('custom-service', []).value,
-    ],
+    allServices: [],
     teardown: null,
   }),
   getters: {
     displayServices(): Service[] {
       // return this.allServices.filter(() => false)
-      return this.allServices as Service[]
+      return (this.allServices as Service[]).sort((a, b) => a.sorted - b.sorted)
     },
     enabledServices(): Service[] {
       return this.allServices.filter(service => service.enable)
     },
   },
   actions: {
+    async initData() {
+      const initService = createInitialService(false)
+      const servicesConfig = useLocalStorage<{ allServices: Service[] }>('services', {
+        allServices: [],
+      })
+
+      const services = (await getUserServiceListByUser() || []).map(service =>
+        ({
+          ...initService,
+          ...service,
+          ...(servicesConfig.value.allServices.find(s => s.id === service.id) || {}) as Service,
+          ...loadConfig,
+        }))
+      const customServices = useLocalStorage<Service[]>('custom-service', []).value.map(service => ({ ...initService, ...service, ...loadConfig }))
+
+      this.allServices = reactive([...services, ...customServices])
+    },
     serviceMaintenanceTick() {
       this.serviceMaintenance()
       this.teardown = debounce(this.serviceMaintenanceTick, ms('10s'))
@@ -119,7 +62,7 @@ export const useServiceStore = defineStore({
           if (
             !service.lastHibernated
             && Date.now() - service.lastUsed
-              > ms('5m')
+            > ms('5m')
           ) {
             // If service is stale, hibernate it.
             this.hibernate({ serviceId: service.id })
@@ -159,19 +102,22 @@ export const useServiceStore = defineStore({
       })
       const service = this.allServices.find(service => service.id === serviceId)
       if (service) {
-        service.lastUsed = Date.now()
         service.isActive = true
+        service.lastUsed = Date.now()
+        // fix: piniaPluginPersistedstate not working ? why ?
+        localStorage.setItem('services', JSON.stringify({ allServices: this.allServices.map(s => omit(s, '_webview')) }))
       }
     },
     reload({ serviceId }: { serviceId: string }) {
       const service = this.allServices.find(service => service.id === serviceId)
-      if (service) {
+      if (service && service.enable) {
         service.isLoading = true
         this.awake({ serviceId })
         service._webview?.reload()
       }
     },
-    addService(service: Service) {
+    async addService(service: Service) {
+      service.sorted = (Math.max(...this.allServices.map(s => s.sorted)) || 0) + 1
       // TODO: maybe use folder
       const customAppStorage = useLocalStorage<Service[]>('custom-service', [])
       // custom service
@@ -180,9 +126,10 @@ export const useServiceStore = defineStore({
         customAppStorage.value.push(service)
       }
       else {
-        // TODO: save service
+        const res = await saveUserService({ appId: service.id, ...omit(service, 'id') })
+        if (res)
+          this.allServices.push(service)
       }
-      this.allServices.push(service)
     },
     didMediaPlaying({ serviceId }: { serviceId: string }) {
       const service = this.allServices.find(service => service.id === serviceId)

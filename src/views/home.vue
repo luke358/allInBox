@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import ServiceView from '../components/ServiceView.vue'
 import { useServiceStore } from '../store/services'
 import type { Service } from '../types'
@@ -10,11 +10,14 @@ import ServiceList from '../components/ServiceList.vue'
 
 const services = useServiceStore()
 
+onMounted(() => {
+  services.initData()
+})
+
 // 初始是否渲染
 const serviceUsed = ref<Set<string>>(new Set())
 
 function changeWebView(service: Service) {
-  // console.log(item.url)
   services.setActive({ serviceId: service.id })
   serviceUsed.value.add(service.id)
 }
@@ -29,15 +32,7 @@ const settings = [
     icon: 'i-carbon-settings',
   },
 ]
-// const services = [
-//   { src: 'https://mail.google.com/mail', name: 'Gmail' },
-//   { src: 'https://twitter.com/', name: 'Twitter' },
-//   { src: 'https://github.com/', name: 'Github' },
-//   { src: 'https://www.aliyundrive.com/drive', name: '阿里云盘' },
-//   // preload 初始强制加载
-//   { src: 'https://discord.com/app', preload: true, name: 'Discord' },
-//   { src: 'https://web.telegram.org/a/', preload: true, name: 'Telegram' },
-// ]
+
 const drawer = ref(false)
 
 const SETTING_HEIGHT = 45 * settings.length + 60
@@ -67,7 +62,7 @@ const SETTING_HEIGHT = 45 * settings.length + 60
           :service="service"
           @set-webview="(webView) => (service._webview = webView)"
           @did-finish-load="() => { service.isLoading = false;service.isError = false; }"
-          @did-fail-load="() => service.isError = true"
+          @did-fail-load="() => { service.isError = true; service.isLoading = false }"
         />
       </div>
     </div>
