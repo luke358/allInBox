@@ -11,6 +11,7 @@ export enum LinkHandling {
 }
 export interface Service {
   id: string
+  serviceId: string
   name: string
   url: string
   iconUrl: string
@@ -43,6 +44,7 @@ export interface Service {
 
   isCustom?: boolean
   sorted: number
+  timestamp: number
 }
 
 export interface ServiceStore {

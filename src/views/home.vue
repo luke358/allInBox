@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import ServiceView from '../components/ServiceView.vue'
 import { useServiceStore } from '../store/services'
 import type { Service } from '../types'
@@ -9,10 +9,6 @@ import AddServiceDrawer from '../components/AddServiceDrawer.vue'
 import ServiceList from '../components/ServiceList.vue'
 
 const services = useServiceStore()
-
-onMounted(() => {
-  services.initData()
-})
 
 // 初始是否渲染
 const serviceUsed = ref<Set<string>>(new Set())

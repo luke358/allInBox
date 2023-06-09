@@ -21,7 +21,7 @@ const innerDrawer = ref(false)
 const service = ref<Service>(cloneDeep(createInitialService()))
 function openInnerDrawer(s?: Service) {
   innerDrawer.value = true
-  service.value = cloneDeep(s || createInitialService())
+  service.value = cloneDeep((s && cloneDeep(s)) || createInitialService())
 }
 
 const rules = reactive<FormRules>({

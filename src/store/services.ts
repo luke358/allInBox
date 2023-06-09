@@ -2,19 +2,9 @@
 import { defineStore } from 'pinia'
 import { nanoid } from 'nanoid'
 import ms from 'ms'
-import { debounce, omit } from 'lodash-es'
-import { useLocalStorage } from '@vueuse/core'
-import { reactive } from 'vue'
+import { debounce } from 'lodash-es'
 import type { Service, ServiceStore } from '../types'
-import { getUserServiceListByUser, saveUserService } from '../api/v1'
-import { createInitialService } from '../utils'
 
-const loadConfig = {
-  isMediaPlaying: false,
-  isFirstLoad: true,
-  isError: false,
-  isLoading: true,
-}
 export const useServiceStore = defineStore({
   id: 'services',
   persist: {
@@ -34,23 +24,6 @@ export const useServiceStore = defineStore({
     },
   },
   actions: {
-    async initData() {
-      const initService = createInitialService(false)
-      const servicesConfig = useLocalStorage<{ allServices: Service[] }>('services', {
-        allServices: [],
-      })
-
-      const services = (await getUserServiceListByUser() || []).map(service =>
-        ({
-          ...initService,
-          ...service,
-          ...(servicesConfig.value.allServices.find(s => s.id === service.id) || {}) as Service,
-          ...loadConfig,
-        }))
-      const customServices = useLocalStorage<Service[]>('custom-service', []).value.map(service => ({ ...initService, ...service, ...loadConfig }))
-
-      this.allServices = reactive([...services, ...customServices])
-    },
     serviceMaintenanceTick() {
       this.serviceMaintenance()
       this.teardown = debounce(this.serviceMaintenanceTick, ms('10s'))
@@ -104,8 +77,6 @@ export const useServiceStore = defineStore({
       if (service) {
         service.isActive = true
         service.lastUsed = Date.now()
-        // fix: piniaPluginPersistedstate not working ? why ?
-        localStorage.setItem('services', JSON.stringify({ allServices: this.allServices.map(s => omit(s, '_webview')) }))
       }
     },
     reload({ serviceId }: { serviceId: string }) {
@@ -119,17 +90,15 @@ export const useServiceStore = defineStore({
     async addService(service: Service) {
       service.sorted = (Math.max(...this.allServices.map(s => s.sorted)) || 0) + 1
       // TODO: maybe use folder
-      const customAppStorage = useLocalStorage<Service[]>('custom-service', [])
+      service.id = nanoid()
+      service.timestamp = Date.now()
+      // const customAppStorage = useLocalStorage<Service[]>('custom-service', [])
       // custom service
-      if (service.isCustom) {
-        service.id = nanoid()
-        customAppStorage.value.push(service)
-      }
-      else {
-        const res = await saveUserService({ appId: service.id, ...omit(service, 'id') })
-        if (res)
-          this.allServices.push(service)
-      }
+      if (service.isCustom)
+        // customAppStorage.value.push(service)
+        this.allServices.push(service)
+      else
+        this.allServices.push(service)
     },
     didMediaPlaying({ serviceId }: { serviceId: string }) {
       const service = this.allServices.find(service => service.id === serviceId)

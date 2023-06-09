@@ -21,6 +21,7 @@ export function createInitialService(isCustom = true) {
     isActive: false,
     isMuted: false,
     id: nanoid(),
+    serviceId: nanoid(),
     iconUrl: 'xxx',
 
     enable: true,
@@ -43,6 +44,15 @@ export function createInitialService(isCustom = true) {
     timer: 15,
     isCustom,
     sorted: 0,
+    timestamp: Date.now(),
   }
   return initialService
+}
+
+export const loadConfig = {
+  isMediaPlaying: false,
+  isFirstLoad: true,
+  isError: false,
+  isLoading: true,
+  isActive: false,
 }
