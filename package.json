@@ -46,7 +46,7 @@
     "@types/lodash-es": "^4.17.7",
     "@types/ms": "^0.7.31",
     "@vitejs/plugin-vue": "^4.2.3",
-    "electron": "^26.1.0",
+    "electron": "^27.0.2",
     "electron-builder": "^24.6.3",
     "eslint": "^8.41.0",
     "sass": "^1.62.1",
