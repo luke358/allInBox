@@ -42,7 +42,7 @@
     "vue-router": "^4.2.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.43.1",
+    "@antfu/eslint-config": "^2.6.1",
     "@types/lodash-es": "^4.17.7",
     "@types/ms": "^0.7.31",
     "@vitejs/plugin-vue": "^4.2.3",
