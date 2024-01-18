@@ -5,7 +5,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import router from './router'
 import './style.scss'
 import App from './App.vue'
-import './samples/node-api'
+// import './samples/node-api'
 import 'normalize.css'
 
 const pinia = createPinia()
