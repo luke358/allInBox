@@ -61,7 +61,7 @@ async function createWindow() {
       // Consider using contextBridge.exposeInMainWorld
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
       webviewTag: true,
       plugins: true,
     },
@@ -99,6 +99,11 @@ async function createWindow() {
   })
   // win.webContents.on('will-navigate', (event, url) => { }) #344
   attachTitlebarToWindow(win)
+
+  win.webContents.on('will-attach-webview', (e, webPreferences) => {
+    console.log(webPreferences, e, 'qd');
+    webPreferences.preload = join(__dirname, '../../preload/preload.js')
+  })
 }
 
 app.whenReady().then(createWindow)
