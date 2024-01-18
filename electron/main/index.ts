@@ -101,8 +101,7 @@ async function createWindow() {
   attachTitlebarToWindow(win)
 
   win.webContents.on('will-attach-webview', (e, webPreferences) => {
-    console.log(webPreferences, e, 'qd');
-    webPreferences.preload = join(__dirname, '../../preload/preload.js')
+    // webPreferences.preload = join(__dirname, '../../preload/recipe.js')
   })
 }
 

@@ -41,8 +41,8 @@ onBeforeUnmount(() => {
     emits('setWebview', _webviewRef)
   }" autosize :src="service.url" style="display:inline-flex;"
     class="w-100% h-100%" allowpopups nodeintegration
-    webpreferences="spellcheck=1, contextIsolation=1, sandbox=false" :disablewebsecurity="true"
-    :partition="service.id" />
+    webpreferences="spellcheck=1, contextIsolation=1, sandbox=false"
+    :disablewebsecurity="true" :partition="`${service.id}:${service.name}`" />
 </template>
  
 <style scoped>

@@ -1,5 +1,4 @@
 import { Titlebar, TitlebarColor } from 'custom-electron-titlebar'
-import { contextBridge } from 'electron'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Title bar implementation
@@ -18,11 +17,6 @@ function domReady(condition: DocumentReadyState[] = ['complete', 'interactive'])
     }
   })
 }
-
-contextBridge.exposeInMainWorld('API', {
-  // eslint-disable-next-line no-console
-  log: console.log,
-})
 
 const safeDOM = {
   append(parent: HTMLElement, child: HTMLElement) {
