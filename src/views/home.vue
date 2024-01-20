@@ -56,8 +56,6 @@ const SETTING_HEIGHT = 45 * settings.length + 60
         <ServiceView
           v-if="service.preload || service.isActive || serviceUsed.has(service.id)"
           :service="service"
-          @set-webview="(webView) => (service._webview = webView)"
-          @did-finish-load="() => { service.isLoading = false;service.isError = false; }"
           @did-fail-load="() => { service.isError = true; service.isLoading = false }"
         />
       </div>

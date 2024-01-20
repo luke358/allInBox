@@ -2,7 +2,9 @@ import { release } from 'node:os'
 import { join } from 'node:path'
 import { BrowserWindow, app, ipcMain, shell } from 'electron'
 import { attachTitlebarToWindow, setupTitlebar } from 'custom-electron-titlebar/main'
+import * as remoteMain from '@electron/remote/main';
 
+remoteMain.initialize();
 // The built directory structure
 //
 // ├─┬ dist-electron
@@ -61,7 +63,7 @@ async function createWindow() {
       // Consider using contextBridge.exposeInMainWorld
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       nodeIntegration: true,
-      contextIsolation: true,
+      contextIsolation: false,
       webviewTag: true,
       plugins: true,
     },
@@ -91,6 +93,8 @@ async function createWindow() {
     win?.webContents.send('main-process-message', new Date().toLocaleString())
   })
 
+  remoteMain.enable(win.webContents)
+
   // Make all links open with the browser, not with the application
   win.webContents.setWindowOpenHandler(({ url }) => {
     if (url.startsWith('https:'))
@@ -101,7 +105,7 @@ async function createWindow() {
   attachTitlebarToWindow(win)
 
   win.webContents.on('will-attach-webview', (e, webPreferences) => {
-    // webPreferences.preload = join(__dirname, '../../preload/recipe.js')
+    webPreferences.preload = join(__dirname, '../../preload/recipe.js')
   })
 }
 

@@ -7,6 +7,7 @@ const noop = () => { }
 // window.chrome.runtime.sendMessage = noop
 const badgeHandler = new BadgeHandler();
 
+console.log('qqqqq ddddd ccccc vvvvv ssss')
 contextBridge.exposeInMainWorld('API', {
   open: window.open,
   setBadge: (direct, indirect) => badgeHandler.setBadge(direct, indirect),
@@ -22,6 +23,9 @@ class RecipeController {
     'initialize-recipe': 'loadRecipeModule',
     'find-in-page': 'openFindInPage',
   }
+  constructor() {
+    this.initialize();
+  }
 
   async initialize() {
     for (const channel of Object.keys(this.ipcEvents)) {
@@ -29,13 +33,19 @@ class RecipeController {
         this[this.ipcEvents[channel]](...args);
       });
     }
+    setTimeout(() => {
+      ipcRenderer.sendToHost('hello')
+    }, 100);
+
   }
 
   loadRecipeModule(_event, config, recipe) {
-    const modulePath = join(recipe.path, 'webview.js');
+    console.log(recipe, 'reeeeee')
+    // const modulePath = join(recipe.path, 'webview.js');
     // debug('module path', modulePath);
     // Delete module from cache
-    delete require.cache[require.resolve(modulePath)];
+    // delete require.cache[require.resolve(modulePath)];
+    // console.log(modulePath, 'modulePath')
     try {
       // this.recipe = new RecipeWebview(
       //   badgeHandler,
@@ -60,4 +70,5 @@ class RecipeController {
   }
 }
 
+console.log('new RecipeController();')
 new RecipeController();

@@ -7,6 +7,7 @@ interface Window {
 declare global {
   interface Window {
     webViewBridge: any
+    allInBox: any
   }
 }
 

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { nanoid } from 'nanoid'
 import ms from 'ms'
 import { debounce } from 'lodash-es'
-import type { Service, ServiceStore } from '../types'
+import type { ElectronWebView, Service, ServiceStore } from '../types'
 
 export const useServiceStore = defineStore({
   id: 'services',
@@ -20,7 +20,7 @@ export const useServiceStore = defineStore({
       return (this.allServices as Service[]).sort((a, b) => a.sorted - b.sorted)
     },
     enabledServices(): Service[] {
-      return this.allServices.filter(service => service.enable)
+      return (this.allServices as Service[]).filter(service => service.enable)
     },
   },
   actions: {
@@ -44,7 +44,7 @@ export const useServiceStore = defineStore({
       }
     },
     awake({ serviceId }: { serviceId: string }) {
-      const service = this.allServices.find(service => service.id === serviceId)
+      const service = this.one(serviceId)
 
       if (service) {
         service.lastHibernated = null
@@ -54,7 +54,7 @@ export const useServiceStore = defineStore({
       }
     },
     hibernate({ serviceId }: { serviceId: string }) {
-      const service = this.allServices.find(service => service.id === serviceId)
+      const service = this.one(serviceId)
       if (!service?.isHibernateEnabled && !service?.isMediaPlaying)
         return
 
@@ -62,7 +62,7 @@ export const useServiceStore = defineStore({
       service.lastHibernated = Date.now()
     },
     enable({ serviceId }: { serviceId: string }) {
-      const service = this.allServices.find(service => service.id === serviceId)
+      const service = this.one(serviceId)
       if (service) {
         service.enable = true
         this.awake({ serviceId })
@@ -73,14 +73,14 @@ export const useServiceStore = defineStore({
         service.isActive = false
         service.lastUsed = Date.now()
       })
-      const service = this.allServices.find(service => service.id === serviceId)
+      const service = this.one(serviceId)
       if (service) {
         service.isActive = true
         service.lastUsed = Date.now()
       }
     },
     reload({ serviceId }: { serviceId: string }) {
-      const service = this.allServices.find(service => service.id === serviceId)
+      const service = this.one(serviceId)
       if (service && service.enable) {
         service.isLoading = true
         this.awake({ serviceId })
@@ -101,7 +101,7 @@ export const useServiceStore = defineStore({
         this.allServices.push(service)
     },
     didMediaPlaying({ serviceId }: { serviceId: string }) {
-      const service = this.allServices.find(service => service.id === serviceId)
+      const service = this.one(serviceId)
       if (service)
         service.isMediaPlaying = true
     },
@@ -110,5 +110,59 @@ export const useServiceStore = defineStore({
       if (service)
         service.isMediaPlaying = false
     },
+    one(id: string): Service {
+      return this.allServices.find(service => service.id === id) as Service;
+    },
+    setWebviewReference({ serviceId, webview }: { serviceId: string, webview: ElectronWebView }) {
+      const service = this.one(serviceId)
+      if (service) {
+        service._webview = webview;
+        this.initializeWebViewEvents(service)
+        // service.initializeWebViewEvents({
+        //   handleIPCMessage: this.actions.service.handleIPCMessage,
+        //   openWindow: this.actions.service.openWindow,
+        //   stores: this.stores,
+        // });
+        // service.initializeWebViewListener();
+
+      }
+
+    },
+    initializeWebViewEvents(service: Service) {
+      service._webview?.addEventListener('ipc-message', (e) => {
+        this._handleIPCMessage({
+          serviceId: service.id,
+          channel: e.channel,
+          args: e.args,
+        });
+      })
+    },
+    _handleIPCMessage({ serviceId, channel, args }: { serviceId: string, channel: string, args: any }) {
+      switch (channel) {
+        case 'hello': {
+          // this._initRecipePolling(service.id);
+          this._initializeServiceRecipeInWebview(serviceId);
+          // this._shareSettingsWithServiceProcess();
+
+          break;
+        }
+      }
+    },
+    _initializeServiceRecipeInWebview(serviceId: string) {
+      const service = this.one(serviceId);
+      if (service && service._webview) {
+        service._webview.send('initialize-recipe', {
+          version: '1.1'
+        }, {
+          "featured": true,
+          "id": "discord",
+          "name": "Discord",
+          "version": "1.8.2",
+          "icons": {
+            "svg": "https://cdn.jsdelivr.net/gh/ferdium/ferdium-recipes/recipes/discord/icon.svg"
+          }
+        })
+      }
+    }
   },
 })

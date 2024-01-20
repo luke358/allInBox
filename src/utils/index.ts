@@ -10,7 +10,7 @@ export function getDomain(sourceUrl: string | undefined) {
   return domain
 }
 
-export function createInitialService(isCustom = true) {
+export function createInitialService(isCustom = true): Service {
   const initialService: Service = {
     url: '',
     preload: false,

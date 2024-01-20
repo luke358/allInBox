@@ -8,10 +8,20 @@ const emits = defineEmits(['setWebview', 'didFinishLoad', 'didFailLoad'])
 const services = useServiceStore()
 const webViewRef = ref<ElectronWebView | null>(null)
 
-const didFinishLoad = () => emits('didFinishLoad')
+const didFinishLoad = () => {
+  service.isLoading = false;
+  service.isError = false;
+  console.log('did-finish-load')
+  emits('didFinishLoad')
+}
 const didFailLoad = () => emits('didFailLoad')
+const didAttach = () => {
+  services.setWebviewReference({ serviceId: service.id, webview: webViewRef.value! as ElectronWebView })
+}
+
 onMounted(() => {
   webViewRef.value?.addEventListener('did-finish-load', didFinishLoad)
+  webViewRef.value?.addEventListener('did-attach', didAttach)
   webViewRef.value?.addEventListener('did-fail-load', didFailLoad)
   webViewRef.value?.addEventListener('media-started-playing', () => services.didMediaPlaying({ serviceId: service.id }))
   webViewRef.value?.addEventListener('media-paused', () => services.didMediaPaused({ serviceId: service.id }))
@@ -19,13 +29,13 @@ onMounted(() => {
     console.log('dom-ready')
     webViewRef.value?.openDevTools()
   })
-  console.log(webViewRef.value)
-  webViewRef.value?.addEventListener('ipc-message', (e: any) => {
-    console.log('ipc-message')
-    if (e.channel === 'data') {
-      console.log(e)
-    }
-  })
+  // console.log(webViewRef.value)
+  // webViewRef.value?.addEventListener('ipc-message', (e: any) => {
+  //   console.log('ipc-message')
+  //   if (e.channel === 'data') {
+  //     console.log(e)
+  //   }
+  // })
 })
 onBeforeUnmount(() => {
   webViewRef.value?.removeEventListener('did-finish-load', didFinishLoad)

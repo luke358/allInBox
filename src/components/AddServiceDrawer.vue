@@ -44,7 +44,7 @@ async function submit(formEl: FormInstance | undefined) {
     // setTimeout(() => {
     //   innerDrawer.value = false
     // }, 1000)
-    services.addService(service.value)
+    services.addService(service.value as Service)
   })
 }
 

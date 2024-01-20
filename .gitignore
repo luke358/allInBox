@@ -28,3 +28,10 @@ release
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+recipes/all.json
+recipes/archives
+
+.vscode
+
+preload/recipe.js

@@ -1,33 +1,32 @@
 "use strict";
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
-var import_node_path = require("node:path");
+
+// preload/recipe.ts
+var import_electron2 = require("electron");
+
+// preload/badge.ts
 var import_electron = require("electron");
-var import_badge = __toESM(require("./badge"));
-const noop = () => {
+var BadgeHandler = class {
+  safeParseInt(text) {
+    if (text === void 0 || text === null) {
+      return 0;
+    }
+    const parsedNumber = Number.parseInt(text.toString(), 10);
+    const adjustedNumber = Number.isNaN(parsedNumber) ? 0 : parsedNumber;
+    return Math.max(adjustedNumber, 0);
+  }
+  setBadge(direct, indirect) {
+    const count = {
+      direct: this.safeParseInt(direct),
+      indirect: this.safeParseInt(indirect)
+    };
+    import_electron.ipcRenderer.sendToHost("message-counts", count);
+  }
 };
-const badgeHandler = new import_badge.default();
-import_electron.contextBridge.exposeInMainWorld("API", {
+
+// preload/recipe.ts
+var badgeHandler = new BadgeHandler();
+console.log("qqqqq ddddd ccccc vvvvv ssss");
+import_electron2.contextBridge.exposeInMainWorld("API", {
   open: window.open,
   setBadge: (direct, indirect) => badgeHandler.setBadge(direct, indirect),
   safeParseInt: (text) => badgeHandler.safeParseInt(text)
@@ -36,25 +35,31 @@ import_electron.contextBridge.exposeInMainWorld("API", {
   //   notificationsHandler.displayNotification(title, options),
   // getDisplayMediaSelector,
 });
-class RecipeController {
+var RecipeController = class {
   ipcEvents = {
     "initialize-recipe": "loadRecipeModule",
     "find-in-page": "openFindInPage"
   };
+  constructor() {
+    this.initialize();
+  }
   async initialize() {
     for (const channel of Object.keys(this.ipcEvents)) {
-      import_electron.ipcRenderer.on(channel, (...args) => {
+      import_electron2.ipcRenderer.on(channel, (...args) => {
         this[this.ipcEvents[channel]](...args);
       });
     }
+    setTimeout(() => {
+      import_electron2.ipcRenderer.sendToHost("hello");
+    }, 100);
   }
   loadRecipeModule(_event, config, recipe) {
-    const modulePath = (0, import_node_path.join)(recipe.path, "webview.js");
-    delete require.cache[require.resolve(modulePath)];
+    console.log(recipe, "reeeeee");
     try {
     } catch (error) {
       console.error("Recipe initialization failed", error);
     }
   }
-}
+};
+console.log("new RecipeController();");
 new RecipeController();

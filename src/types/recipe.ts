@@ -1,15 +1,5 @@
-import type { DebouncedFunc } from 'lodash-es'
 
-export type ElectronWebView = Electron.WebviewTag
-
-export enum LinkHandling {
-  'Default' = 0,
-  'Block all pop-ups' = 1,
-  'Open all in pop-ups' = 2,
-  'Open all in default browser' = 3,
-  'Open all in tabs' = 4,
-}
-export interface Service {
+export interface Recipe {
   id: string
   serviceId: string
   name: string
@@ -39,7 +29,6 @@ export interface Service {
   isLoading: boolean
   isMediaPlaying: boolean
 
-  linkHandling: LinkHandling
   team?: string
 
   isCustom?: boolean
@@ -47,9 +36,6 @@ export interface Service {
   timestamp: number
 }
 
-export type IService = Service
-
-export interface ServiceStore {
-  allServices: Service[]
-  teardown: DebouncedFunc<() => void> | null
+export interface RecipeStore {
+  allRecipes: Recipe[]
 }

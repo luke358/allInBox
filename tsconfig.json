@@ -13,10 +13,10 @@
     "skipLibCheck": true,
     "noEmit": true,
     "paths": {
-      "@/src/*": ["./src/*"]
+      "@/*": ["./src/*"]
     },
   },
-  "include": ["src"],
+  "include": ["src", "helpers"],
   "references": [
     { "path": "./tsconfig.node.json" }
   ]

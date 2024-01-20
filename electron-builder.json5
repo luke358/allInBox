@@ -10,7 +10,20 @@
   },
   "files": [
     "dist-electron",
-    "dist"
+    "dist",
+    "preload/recipe.js"
+  ],
+  "extraResources": [
+    {
+      "from": "./recipes/archives",
+      "to": "app.asar.unpacked/recipes",
+      "filter": ["**/*"]
+    },
+    {
+      "from": "./recipes/all.json",
+      "to": "app.asar.unpacked/recipes/all.json",
+      "filter": ["**/*"]
+    }
   ],
   "mac": {
     "artifactName": "${productName}_${version}.${ext}",
