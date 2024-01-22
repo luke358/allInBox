@@ -1,3 +1,4 @@
+import { ElectronWebView } from "./service"
 
 export interface Recipe {
   id: string
