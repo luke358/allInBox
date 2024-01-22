@@ -43,6 +43,7 @@ const initServices: Service[] = [
     linkHandling: LinkHandling.Default,
     timestamp: Date.now(),
 
+    recipeId: 'discord',
   },
   {
     url: 'https://web.telegram.org/a/',
@@ -75,6 +76,7 @@ const initServices: Service[] = [
     sorted: 0,
     timestamp: Date.now(),
 
+    recipeId: 'telegram',
   },
   {
     url: 'https://www.aliyundrive.com/drive',
@@ -106,6 +108,7 @@ const initServices: Service[] = [
     sorted: 0,
     timestamp: Date.now(),
 
+    recipeId: 'aliyundrive',
   },
 ]
 onMounted(async () => {

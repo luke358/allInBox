@@ -45,6 +45,8 @@ export interface Service {
   isCustom?: boolean
   sorted: number
   timestamp: number
+
+  recipeId: string
 }
 
 export type IService = Service

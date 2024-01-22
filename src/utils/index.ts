@@ -45,6 +45,8 @@ export function createInitialService(isCustom = true): Service {
     isCustom,
     sorted: 0,
     timestamp: Date.now(),
+
+    recipeId: 'unknown'
   }
   return initialService
 }
