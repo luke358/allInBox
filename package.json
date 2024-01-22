@@ -19,7 +19,7 @@
     }
   },
   "scripts": {
-    "dev": "vite --port 5555",
+    "dev": "npm run recipe && vite --port 5555",
     "build": "vue-tsc --noEmit && vite build && electron-builder",
     "recipe": "esbuild ./preload/recipe.ts --bundle --packages=external --outfile=./preload/recipe.js --format=cjs",
     "preview": "vite preview",
