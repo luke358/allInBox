@@ -72,7 +72,13 @@ export default defineConfig(({ command }) => {
         },
       ]),
       // Use Node.js API in the Renderer-process
-      renderer(),
+      renderer({
+        // FIX: https://github.com/caoxiemeihao/nuxt-electron/issues/16#issuecomment-1487849598
+        resolve: process.env.NODE_ENV === 'development' ? {
+          'fs-extra': { type: 'esm' },
+          'tar': { type: 'esm' }
+        } : undefined
+      }),
     ],
     resolve: {
       alias: {

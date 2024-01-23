@@ -1,11 +1,10 @@
+import { app } from '@electron/remote';
 import { join } from 'path';
 
 export function asarPath(dir: string = '') {
   return dir.replace('app.asar', 'app.asar.unpacked');
 }
 
-// Replacing app.asar is not beautiful but unfortunately necessary
 export function asarRecipesPath(...segments: string[]) {
-  console.log(__dirname, 'recipesDirectory')
-  return process.env.NODE_ENV === 'development' ? '' : join(asarPath(join(__dirname, '..', 'recipes')), ...[segments].flat());
+  return join(asarPath(join(app.getAppPath(), process.env.NODE_ENV === 'development' ? 'recipes/archives' : 'recipes')), ...[segments].flat());
 }
