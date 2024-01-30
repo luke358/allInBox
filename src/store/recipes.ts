@@ -9,22 +9,22 @@ import { asarRecipesPath } from '@/helpers/asar-helpers'
 import { ensureDirSync, pathExistsSync, readJsonSync, removeSync, copySync, readdirSync, statSync } from 'fs-extra';
 import sleep from '@/helpers/async-helpers';
 import tar, { x } from 'tar';
+import { loadRecipeConfig } from '@/helpers/recipe-helpers';
 
-export const useRecipeStore = defineStore('recipe',() => {
+export const useRecipeStore = defineStore('recipe', () => {
   const allRecipes = ref<Recipe[]>([])
   const cacheRecipeByServiceId: Record<string, Recipe> = {}
   const getRecipeByServiceId = async (service: Service) => {
     const recipeId = service.recipeId
-    const serviceId = service.serviceId
-    if(cacheRecipeByServiceId[serviceId]) return cacheRecipeByServiceId[serviceId]
+    if (cacheRecipeByServiceId[recipeId]) return cacheRecipeByServiceId[recipeId]
     const recipe = allRecipes.value.find((recipe) => recipe.id === recipeId)
-    if(recipe) return (cacheRecipeByServiceId[serviceId] = recipe);
+    if (recipe) return (cacheRecipeByServiceId[recipeId] = recipe);
 
     const recipes = [service.recipeId]
     // 加载 recipe
     await _bulkRecipeCheck(recipes)
-
-    return cacheRecipeByServiceId[serviceId]
+    // return cacheRecipeByServiceId[serviceId]
+    return allRecipes.value.find((recipe) => recipe.id === recipeId)
   }
 
   const _bulkRecipeCheck = (unfilteredRecipes: string[]) => {
@@ -38,7 +38,6 @@ export const useRecipeStore = defineStore('recipe',() => {
       recipes.map(async (recipeId: string) => {
         let recipe = allRecipes.value.find(r => r.id === recipeId);
         await getRecipePackage(recipeId);
-
         if (!recipe) {
           console.warn(
             `Recipe '${recipeId}' not installed, trying to fetch from server`,
@@ -53,10 +52,9 @@ export const useRecipeStore = defineStore('recipe',() => {
             return null;
           }
         }
-
         return recipe;
       }),
-    ).catch(error => console.error("Can't load recipe", error));    
+    ).catch(error => console.error("Can't load recipe", error));
   }
 
   // 加载 recipe 文件
@@ -118,15 +116,26 @@ export const useRecipeStore = defineStore('recipe',() => {
         statSync(join(recipesDirectory, file)).isDirectory() &&
         file !== 'temp' &&
         file !== 'dev',
-    );
+    ).map(id => `${recipesDirectory}/${id}`);
 
-    paths.map(id => {
-      // const Recipe = require(id)(class RecipeModel {});
+    allRecipes.value = paths.map(id => {
+      // TODO: RecipeModel 实现
+      const Recipe = require(id)(class RecipeModel {
+        config: any
+        id: string
+        constructor(config: any) {
+          this.config = config
+          this.id = config.id
+        }
+      });
+      console.log(Recipe, 'allRecipescc', new Recipe(loadRecipeConfig(id)))
+      return new Recipe(loadRecipeConfig(id))
+    });
+    console.log(allRecipes.value, 'ddddd')
 
-      // console.log(new Recipe())
-    })
-
+    return allRecipes.value
   }
+
 
   return {
     allRecipes,

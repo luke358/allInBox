@@ -11,7 +11,6 @@ export enum LinkHandling {
 }
 export interface Service {
   id: string
-  serviceId: string
   name: string
   url: string
   iconUrl: string

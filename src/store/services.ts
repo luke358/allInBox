@@ -149,12 +149,12 @@ export const useServiceStore = defineStore({
         }
       }
     },
-    _initializeServiceRecipeInWebview(serviceId: string) {
+    async _initializeServiceRecipeInWebview(serviceId: string) {
       const service = this.one(serviceId);
       if (service && service._webview) {
         const recipeStore = useRecipeStore()
-        recipeStore.getRecipeByServiceId(service)
-
+        const recipe = await recipeStore.getRecipeByServiceId(service)
+        console.log(recipe, 'ddddddd')
         service._webview.send('initialize-recipe', {
           version: '1.1'
         }, {
