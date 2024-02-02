@@ -18,6 +18,7 @@ export interface Service {
 
   enable: boolean
   isNotificationEnabled: boolean
+  isBadgeEnabled: boolean
   isSoundsEnabled: boolean
   isShowNameInTabEnabled: boolean
   isHibernateEnabled: boolean
@@ -25,11 +26,16 @@ export interface Service {
 
   isUnreadInTabEnabled: boolean
   isUnreadInGlobalEnabled: boolean
+  unreadDirectMessageCount: number
+  unreadIndirectMessageCount: number
+
   // startup 强制加载
   preload: boolean
-  timer: number | null
+  timer: NodeJS.Timeout | null
   lastUsed: number
   lastHibernated: number | null
+  lastPoll: number | null
+  lastPollAnswer: number | null
 
   isActive: boolean
   isMuted: boolean

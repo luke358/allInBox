@@ -1,13 +1,14 @@
 import { join } from 'node:path';
 import { contextBridge, ipcRenderer } from 'electron';
 import BadgeHandler from './badge';
+import RecipeWebview from './RecipeWebview';
+import { existsSync } from 'fs-extra';
 
 const noop = () => { }
 
 // window.chrome.runtime.sendMessage = noop
 const badgeHandler = new BadgeHandler();
 
-console.log('qqqqq ddddd ccccc vvvvv ssss')
 contextBridge.exposeInMainWorld('API', {
   open: window.open,
   setBadge: (direct, indirect) => badgeHandler.setBadge(direct, indirect),
@@ -23,6 +24,8 @@ class RecipeController {
     'initialize-recipe': 'loadRecipeModule',
     'find-in-page': 'openFindInPage',
   }
+  recipe: RecipeWebview | null = null;
+
   constructor() {
     this.initialize();
   }
@@ -40,23 +43,20 @@ class RecipeController {
   }
 
   loadRecipeModule(_event, config, recipe) {
-    console.log(recipe, 'reeeeee')
-    // const modulePath = join(recipe.path, 'webview.js');
-    // debug('module path', modulePath);
+    const modulePath = join(recipe.path, 'webview.js');
     // Delete module from cache
-    // delete require.cache[require.resolve(modulePath)];
-    // console.log(modulePath, 'modulePath')
+    delete require.cache[require.resolve(modulePath)];
+    console.log(modulePath, 'modulePath')
     try {
-      // this.recipe = new RecipeWebview(
-      //   badgeHandler,
-      //   dialogTitleHandler,
-      //   notificationsHandler,
-      //   sessionHandler,
-      // );
-      // if (existsSync(modulePath)) {
-      //   require(modulePath)(this.recipe, { ...config, recipe });
-      //   debug('Initialize Recipe', config, recipe);
-      // }
+      this.recipe = new RecipeWebview(
+        badgeHandler,
+        // dialogTitleHandler,
+        // notificationsHandler,
+        // sessionHandler,
+      );
+      if (existsSync(modulePath)) {
+        require(modulePath)(this.recipe, { ...config, recipe });
+      }
 
       // this.settings.service = Object.assign(config, { recipe });
 
