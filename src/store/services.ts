@@ -5,6 +5,7 @@ import ms from 'ms'
 import { debounce } from 'lodash-es'
 import type { ElectronWebView, Service, ServiceStore } from '../types'
 import { useRecipeStore } from './recipes'
+import { toRaw } from 'vue'
 
 export const useServiceStore = defineStore({
   id: 'services',
@@ -139,14 +140,48 @@ export const useServiceStore = defineStore({
       })
     },
     _handleIPCMessage({ serviceId, channel, args }: { serviceId: string, channel: string, args: any }) {
+
       switch (channel) {
         case 'hello': {
-          // this._initRecipePolling(service.id);
+          this._initRecipePolling(serviceId);
           this._initializeServiceRecipeInWebview(serviceId);
           // this._shareSettingsWithServiceProcess();
 
           break;
         }
+        case 'alive': {
+          const service = this.one(serviceId);
+          service.lastPollAnswer = Date.now();
+          break;
+        }
+        case 'message-counts': {
+          const service = this.one(serviceId);
+          service.unreadDirectMessageCount = args[0].direct;
+          service.unreadIndirectMessageCount = args[0].indirect;
+  
+          break;
+        }
+      }
+    },
+
+    async _initRecipePolling(serviceId: string) {
+      const service = this.one(serviceId);
+      const delay = ms('2s');
+      if (service) {
+        if (service.timer !== null) {
+          clearTimeout(service.timer);
+        }
+
+        const loop = () => {
+          if (!service._webview) return;
+
+          service._webview.send('poll');
+
+          service.timer = setTimeout(loop, delay);
+          service.lastPoll = Date.now();
+        };
+
+        loop();
       }
     },
     async _initializeServiceRecipeInWebview(serviceId: string) {
@@ -157,15 +192,7 @@ export const useServiceStore = defineStore({
         console.log(recipe, 'ddddddd')
         service._webview.send('initialize-recipe', {
           version: '1.1'
-        }, {
-          "featured": true,
-          "id": "discord",
-          "name": "Discord",
-          "version": "1.8.2",
-          "icons": {
-            "svg": "https://cdn.jsdelivr.net/gh/ferdium/ferdium-recipes/recipes/discord/icon.svg"
-          }
-        })
+        }, toRaw(recipe))
       }
     }
   },

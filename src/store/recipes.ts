@@ -70,22 +70,10 @@ export const useRecipeStore = defineStore('recipe', () => {
     let archivePath: string;
 
     if (pathExistsSync(internalRecipeFile)) {
-      // debug('[ServerApi::getRecipePackage] Using internal recipe file');
       archivePath = internalRecipeFile;
     } else {
       // TODO: 先不考虑 recipe 不存在的情况
-      // debug('[ServerApi::getRecipePackage] Downloading recipe from server');
-      // archivePath = tempArchivePath;
-
-      // const packageUrl = `${apiBase()}/recipes/download/${recipeId}`;
-
-      // const res = await window.fetch(packageUrl);
-      // debug('Recipe downloaded', recipeId);
-      // const blob = await res.blob();
-      // const buffer = await blob.arrayBuffer();
-      // writeFileSync(tempArchivePath, Buffer.from(buffer));
     }
-    // debug(archivePath);
 
     await sleep(10);
 
@@ -121,11 +109,17 @@ export const useRecipeStore = defineStore('recipe', () => {
     allRecipes.value = paths.map(id => {
       // TODO: RecipeModel 实现
       const Recipe = require(id)(class RecipeModel {
-        config: any
-        id: string
-        constructor(config: any) {
-          this.config = config
-          this.id = config.id
+        id = ''
+        name = ''
+        version = ''
+        path = ''
+        serviceURL = ''
+        constructor(data: any) {
+          this.id = data.id
+          this.name = data.name
+          this.path = data.path;
+          this.version = data.version
+          this.serviceURL = data.serviceURL
         }
       });
       console.log(Recipe, 'allRecipescc', new Recipe(loadRecipeConfig(id)))

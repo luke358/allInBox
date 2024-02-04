@@ -96,9 +96,16 @@ function handleMenu(service: Service, index: number) {
               alt=""
             >
             <div
-              v-if="service.isActive" bg-hex-469398 absolute left-0 w-4px
+              v-if="service.isActive"
+              bg-hex-469398 absolute left-0 w-4px
               h-45px
             />
+            <div
+              v-if="service.unreadDirectMessageCount > 0"
+              bg-hex-c95d55 absolute text-10px right-5px leading-15px top-0px px-4px h-15px text-center rounded-9999 text-white
+            >
+              {{ service.unreadDirectMessageCount }}
+            </div>
             <span v-if="service.isHibernateEnabled && service.isHibernating" text-30px color-gray top--10px absolute left-5px>
               •
             </span>
