@@ -13,6 +13,10 @@
 ### Add Custom Service
 ![AllInOne](screenshots/add-custom-service.png)
 
+
+### Translate
+![Alt text](screenshots/translate.png)
+
 ### Hibernate Service
 ![AllInOne](screenshots/hibernate.png)
 ## Services available
