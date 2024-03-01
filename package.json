@@ -54,7 +54,7 @@
     "@types/ms": "^0.7.31",
     "@types/tar": "^6.1.10",
     "@vitejs/plugin-vue": "^4.2.3",
-    "electron": "^28.1.0",
+    "electron": "^29.1.0",
     "electron-builder": "^24.6.3",
     "esbuild": "^0.20.0",
     "eslint": "^8.41.0",
